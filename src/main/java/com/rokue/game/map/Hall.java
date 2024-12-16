@@ -19,7 +19,6 @@ public class Hall {
         this.hero = hero;
     }
 
-    // Hero'yu alma metodu
     public Hero getHero() {
         return hero;
     }
