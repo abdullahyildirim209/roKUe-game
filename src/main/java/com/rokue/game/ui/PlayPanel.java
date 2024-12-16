@@ -41,7 +41,7 @@ public class PlayPanel extends JPanel implements Runnable {
         this.background = new ImageIcon(getClass().getResource("/sprites/hall.png")).getImage();
 
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Pencere boyutu
-        this.setBackground(Color.BLACK); // Arkaplan rengi
+        this.setBackground(Color.BLACK);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
         hero.place(1, 1, hall);
@@ -80,7 +80,6 @@ public class PlayPanel extends JPanel implements Runnable {
             int gemY = hero.getYPosition();
             int direction = -1;
 
-            // Kullanıcı hangi yöne Luring Gem atmak istiyor
             if (keyboard.a) {
                 gemX--; // Sol
                 direction = 0;
@@ -96,8 +95,8 @@ public class PlayPanel extends JPanel implements Runnable {
             }
 
             if (direction != -1 && hall.isPositionEmpty(gemX, gemY)) {
-                hall.placeLuringGem(gemX, gemY, direction); // Hall'da Luring Gem yerleştir
-                keyboard.b = false; // Luring Gem kullanıldıktan sonra tuşu sıfırla
+                hall.placeLuringGem(gemX, gemY, direction);
+                keyboard.b = false;
             }
         }
 
