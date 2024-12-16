@@ -160,7 +160,8 @@ public class Hero extends Entity {
         return health;
     }
 
-    // Render hero sprite
+
+
     @Override
     public Image getSprite() {
         if (isCloakActive()) {
