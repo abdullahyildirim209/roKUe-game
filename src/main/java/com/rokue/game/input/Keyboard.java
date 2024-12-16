@@ -7,6 +7,10 @@ public class Keyboard implements KeyListener {
     public boolean up, down, left, right;
     public boolean b, a, d, w, s;
     public boolean p;
+    private StringBuilder inputBuffer = new StringBuilder();
+
+    public boolean easterEggTriggered = false;
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -25,6 +29,23 @@ public class Keyboard implements KeyListener {
             case KeyEvent.VK_W -> w = true;
             case KeyEvent.VK_S -> s = true;
             case KeyEvent.VK_P -> p = true;
+            default -> checkEasterEgg(e);
+        }
+    }
+
+    private void checkEasterEgg(KeyEvent e) {
+        char typedChar = (char) e.getKeyCode();
+        if (Character.isLetterOrDigit(typedChar)) {
+            inputBuffer.append(typedChar);
+
+            if (inputBuffer.length() > 5) {
+                inputBuffer.deleteCharAt(0);
+            }
+
+            if (inputBuffer.toString().equals("9G302")) {
+                easterEggTriggered = true;
+                System.out.println("Easter Egg Activated!");
+            }
         }
     }
 

@@ -17,6 +17,8 @@ public class Hero extends Entity {
     private final long moveDelay = 200;
     private String direction = "down";
     private int health = 3;
+    private Image easterEggSprite; // Easter egg sprite
+    private boolean easterEggActive = false;
 
     private boolean cloakActive = false;
     private long cloakStartTime = 0;
@@ -30,6 +32,8 @@ public class Hero extends Entity {
         for (int i = 0; i < 8; i++) {
             sprites[i] = new ImageIcon(getClass().getResource("/sprites/hero/" + i + ".png")).getImage();
         }
+
+        easterEggSprite = new ImageIcon(getClass().getResource("/sprites/objects/easterEgg.png")).getImage();
 
         cloakLeftSprite = new ImageIcon(getClass().getResource("/sprites/objects/cloakOfProtectionLeft.png")).getImage();
         cloakRightSprite = new ImageIcon(getClass().getResource("/sprites/objects/cloakOfProtectionRight.png")).getImage();
@@ -64,6 +68,10 @@ public class Hero extends Entity {
 
         if (currentTime - lastMoveTime < moveDelay) {
             return; // Movement delay
+        }
+
+        if (keyboard.easterEggTriggered) {
+            easterEggActive = true;
         }
 
         boolean moved = false;
@@ -174,6 +182,10 @@ public class Hero extends Entity {
                 case "down":
                     return cloakLeftSprite;
             }
+        }
+
+        if (easterEggActive) {
+            return easterEggSprite;
         }
 
         switch (direction) {
