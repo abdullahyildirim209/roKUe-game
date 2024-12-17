@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 
 import com.rokue.game.map.Hall;
 
-public class Archer extends Entity {
+public class Archer extends Monster {
     private Hall hall;
     private final Image sprite;
     private final long attackInterval = 1000;

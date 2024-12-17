@@ -10,8 +10,11 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import com.rokue.game.entities.Enchantment;
 import com.rokue.game.entities.Entity;
+import com.rokue.game.entities.GameObject;
 import com.rokue.game.entities.Hero;
+import com.rokue.game.entities.Monster;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
 
@@ -52,6 +55,8 @@ public class PlayPanel extends JPanel implements Runnable {
         for (int i = 0; i < 3; i++) {
             hall.placeRandomFighter();
         }
+
+        hall.placeRandomWizard();
     }
 
     public void startGameThread() {
@@ -73,36 +78,23 @@ public class PlayPanel extends JPanel implements Runnable {
     }
 
     private void update() {
+
+        hall.processEntities();
         hero.update();
 
-        if (keyboard.b) {
-            int gemX = hero.getXPosition();
-            int gemY = hero.getYPosition();
-            int direction = -1;
-
-            if (keyboard.a) {
-                gemX--; // Sol
-                direction = 0;
-            } else if (keyboard.d) {
-                gemX++; // Sağ
-                direction = 1;
-            } else if (keyboard.w) {
-                gemY--; // Yukarı
-                direction = 2;
-            } else if (keyboard.s) {
-                gemY++; // Aşağı
-                direction = 3;
-            }
-
-            if (direction != -1 && hall.isPositionEmpty(gemX, gemY)) {
-                hall.placeLuringGem(gemX, gemY, direction);
-                keyboard.b = false;
-            }
+        for (Monster monster : hall.getMonsters()) {
+            monster.update();
         }
-
-        for (Entity entity : hall.getEntities()) {
+        for (GameObject object : hall.getObjects()) {
+            object.update();
+        }
+        for (Enchantment enchantment : hall.getEnchantments()) {
+            enchantment.update();
+        }
+        for (Entity entity : hall.getOthers()) {
             entity.update();
         }
+
     }
 
     @Override
@@ -114,7 +106,40 @@ public class PlayPanel extends JPanel implements Runnable {
         g2.drawImage(background, 0, 0, screenWidth, screenHeight, null);
 
         // Draw all entities (including monsters)
-        for (Entity entity : hall.getEntities()) {
+        for (Monster monser : hall.getMonsters()) {
+            g2.drawImage(
+                    monser.getSprite(),
+                    monser.getXPixelPosition() * scale,
+                    monser.getYPixelPosition() * scale,
+                    tileSizeScaled,
+                    tileSizeScaled,
+                    null
+            );
+        }
+
+        for (GameObject object : hall.getObjects()) {
+            g2.drawImage(
+                    object.getSprite(),
+                    object.getXPixelPosition() * scale,
+                    object.getYPixelPosition() * scale,
+                    tileSizeScaled,
+                    tileSizeScaled,
+                    null
+            );
+        }
+
+        for (Enchantment enchantment : hall.getEnchantments()) {
+            g2.drawImage(
+                    enchantment.getSprite(),
+                    enchantment.getXPixelPosition() * scale,
+                    enchantment.getYPixelPosition() * scale,
+                    tileSizeScaled,
+                    tileSizeScaled,
+                    null
+            );
+        }
+
+        for (Entity entity : hall.getOthers()) {
             g2.drawImage(
                     entity.getSprite(),
                     entity.getXPixelPosition() * scale,

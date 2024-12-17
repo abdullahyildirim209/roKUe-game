@@ -1,14 +1,15 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+
 import javax.swing.ImageIcon;
 
-public class Crate extends GameObject {
-    private static final Image sprite = new ImageIcon(Crate.class.getResource("/sprites/objects/crate.png")).getImage();
+public class CloakOfProtection extends Enchantment{
+    private Image sprite;
 
-    public Crate() {
+    public CloakOfProtection() {
         super();
-        canCaryRune = true;
+        sprite = new ImageIcon(getClass().getResource("/sprites/objects/cloakOfProtection.png")).getImage();
     }
 
     @Override
@@ -20,3 +21,4 @@ public class Crate extends GameObject {
     }
 
 }
+

@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 import com.rokue.game.map.Hall;
 
-public class Fighter extends Entity {
+public class Fighter extends Monster {
     private Hall hall;
     private Image sprite;
     private long lastMoveTime = 0; // Son hareket zamanı
@@ -27,6 +27,11 @@ public class Fighter extends Entity {
         this.xPosition = x;
         this.yPosition = y;
         this.hall = hall;
+    }
+
+    public void reset(){
+        targetX = -1;
+        targetY = -1;
     }
 
     @Override
@@ -52,16 +57,7 @@ public class Fighter extends Entity {
         if (followingLuringGem && targetX != -1 && targetY != -1) {
             moveTowards(targetX, targetY);
 
-            // Check if the Fighter reached the Luring Gem
-            if (xPosition == targetX && yPosition == targetY) {
-                Entity entity = hall.getEntityAt(targetX, targetY);
-                if (entity instanceof LuringGem) {
-                    hall.removeEntity(entity); // Remove the Luring Gem from the map
-                }
-                followingLuringGem = false; // Stop following the Luring Gem
-                targetX = -1;
-                targetY = -1;
-            }
+
         } else {
             // Behavior to approach the Hero
             int heroX = hall.getHero().getXPosition();
@@ -92,9 +88,9 @@ public class Fighter extends Entity {
         LuringGem nearestGem = null;
         int minDistance = Integer.MAX_VALUE;
 
-        for (Entity entity : hall.getEntities()) {
-            if (entity instanceof LuringGem) {
-                LuringGem gem = (LuringGem) entity;
+        for (Enchantment enchantment : hall.getEnchantments()) {
+            if (enchantment instanceof LuringGem) {
+                LuringGem gem = (LuringGem) enchantment;
                 int distance = Math.abs(gem.getXPosition() - xPosition) + Math.abs(gem.getYPosition() - yPosition);
 
                 if (distance < minDistance) {
@@ -128,6 +124,7 @@ public class Fighter extends Entity {
             xPosition = newX;
             yPosition = newY;
         }
+        else randomMove();
     }
 
     private void randomMove() {

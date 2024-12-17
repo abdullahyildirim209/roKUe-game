@@ -7,7 +7,7 @@ import com.rokue.game.map.Hall;
 
 
 
-public class LuringGem extends Entity {
+public class LuringGem extends Enchantment {
     private Hall hall;
     private int direction;
     private Image sprite;

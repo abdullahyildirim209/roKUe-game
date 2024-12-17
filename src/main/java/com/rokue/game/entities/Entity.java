@@ -2,7 +2,6 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-
 import com.rokue.game.map.Hall;
 
 public abstract class Entity {
@@ -15,11 +14,11 @@ public abstract class Entity {
     }
 
     public int getXPixelPosition() {
-        return xPosition * 16;
+        return xPosition * 16; // 16: Her grid hücresinin piksel boyutu
     }
 
     public int getYPixelPosition() {
-        return yPosition * 16;
+        return yPosition * 16; // 16: Her grid hücresinin piksel boyutu
     }
 
     public int getXPosition() {

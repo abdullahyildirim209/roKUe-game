@@ -5,8 +5,7 @@ import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
     public boolean up, down, left, right;
-    public boolean b, a, d, w, s;
-    public boolean p;
+    public boolean b, a, d, w, s, p, q, r;
     private StringBuilder inputBuffer = new StringBuilder();
 
     public boolean easterEggTriggered = false;
@@ -29,6 +28,8 @@ public class Keyboard implements KeyListener {
             case KeyEvent.VK_W -> w = true;
             case KeyEvent.VK_S -> s = true;
             case KeyEvent.VK_P -> p = true;
+            case KeyEvent.VK_Q -> q = true;
+            case KeyEvent.VK_R -> r = true;
             default -> checkEasterEgg(e);
         }
     }
@@ -62,6 +63,8 @@ public class Keyboard implements KeyListener {
             case KeyEvent.VK_W -> w = false;
             case KeyEvent.VK_S -> s = false;
             case KeyEvent.VK_P -> p = false;
+            case KeyEvent.VK_Q -> q = false;
+            case KeyEvent.VK_R -> r = false;
         }
     }
 }
