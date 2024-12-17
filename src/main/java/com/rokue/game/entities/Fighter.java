@@ -9,12 +9,12 @@ import com.rokue.game.map.Hall;
 public class Fighter extends Monster {
     private Hall hall;
     private Image sprite;
-    private long lastMoveTime = 0; // Son hareket zamanı
+    private long lastMoveTime = 0;
     private final long moveDelay = 500;
-    private Random random = new Random(); // Rastgele hareket için
+    private Random random = new Random();
     private boolean followingLuringGem = false;
 
-    private int targetX = -1; // Hedef koordinatlar (Luring Gem)
+    private int targetX = -1;
     private int targetY = -1;
 
     public Fighter() {
@@ -37,15 +37,14 @@ public class Fighter extends Monster {
     @Override
     public void update() {
         if (hall == null || hall.getHero() == null) {
-            return; // Ensure hall and hero are not null
+            return;
         }
 
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastMoveTime < moveDelay) {
-            return; // Enforce move delay
+            return;
         }
 
-        // Luring Gem Behavior
         if (!followingLuringGem) {
             LuringGem nearestGem = findNearestLuringGem();
             if (nearestGem != null) {
@@ -53,35 +52,31 @@ public class Fighter extends Monster {
             }
         }
 
-        // If following a Luring Gem, move towards it
         if (followingLuringGem && targetX != -1 && targetY != -1) {
             moveTowards(targetX, targetY);
 
 
         } else {
-            // Behavior to approach the Hero
             int heroX = hall.getHero().getXPosition();
             int heroY = hall.getHero().getYPosition();
 
             int dx = Math.abs(heroX - xPosition);
             int dy = Math.abs(heroY - yPosition);
 
-            // If distance to Hero is 1, attack
             if (dx + dy == 1) {
                 hall.getHero().decreaseHealth();
                 System.out.println("Fighter hit the Hero! Hero's health: " + hall.getHero().getHealth());
             }
-            // If the Hero is within 3 tiles, move towards the Hero
             else if (dx + dy <= 3) {
                 moveTowards(heroX, heroY);
             }
-            // Otherwise, move randomly
+
             else {
                 randomMove();
             }
         }
 
-        lastMoveTime = currentTime; // Update last move time
+        lastMoveTime = currentTime;
     }
 
     private LuringGem findNearestLuringGem() {
@@ -119,7 +114,6 @@ public class Fighter extends Monster {
             newY--;
         }
 
-        // Eğer yeni pozisyon boşsa hareket et
         if (hall.isPositionEmpty(newX, newY)) {
             xPosition = newX;
             yPosition = newY;
@@ -139,7 +133,6 @@ public class Fighter extends Monster {
             case 3 -> newY++; // Aşağı
         }
 
-        // Eğer pozisyon boşsa hareket et
         if (newX >= 1 && newX <= 16 && newY >= 1 && newY <= 16 && hall.isPositionEmpty(newX, newY)) {
             xPosition = newX;
             yPosition = newY;
@@ -147,7 +140,6 @@ public class Fighter extends Monster {
     }
 
     public void followLuringGem(int gemX, int gemY) {
-        // Luring Gem'i takip etmeye başla
         this.followingLuringGem = true;
         this.targetX = gemX;
         this.targetY = gemY;

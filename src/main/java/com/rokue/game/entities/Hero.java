@@ -13,14 +13,14 @@ public class Hero extends Entity {
     private Image cloakLeftSprite;
     private Image cloakRightSprite;
     private long lastMoveTime = 0;
-    private final long moveDelay = 200; // Movement delay (ms)
-    private String direction = "down"; // Default movement direction
-    private int health = 3; // Hero's health
+    private final long moveDelay = 200;
+    private String direction = "down";
+    private int health = 3;
     private int[] inventory = {1, 1, 1};
 
     private boolean cloakActive = false;
-    private long cloakStartTime = 0; // When the cloak was activated
-    private final long cloakDuration = 20000; // Cloak duration (20 seconds in ms)
+    private long cloakStartTime = 0;
+    private final long cloakDuration = 20000;
 
     // Constructor
     public Hero(Keyboard keyboard) {
@@ -79,40 +79,36 @@ public class Hero extends Entity {
     public void update() {
         long currentTime = System.currentTimeMillis();
 
-        // Throw Luring Gem on pressing 'B'
         if (keyboard.b) {
 
             int gemX = xPosition;
             int gemY = yPosition;
             int direction = -1;
 
-            // Kullanıcı hangi yöne Luring Gem atmak istiyor
             if (keyboard.a) {
-                gemX--; // Sol
+                gemX--;
                 direction = 0;
             } else if (keyboard.d) {
-                gemX++; // Sağ
+                gemX++;
                 direction = 1;
             } else if (keyboard.w) {
-                gemY--; // Yukarı
+                gemY--;
                 direction = 2;
             } else if (keyboard.s) {
-                gemY++; // Aşağı
+                gemY++;
                 direction = 3;
             }
 
             if (direction != -1 && hall.isPositionEmpty(gemX, gemY) && removeFromInventory(new LuringGem())) {
-                hall.placeLuringGem(gemX, gemY, direction); // Hall'da Luring Gem yerleştir
-                keyboard.b = false; // Luring Gem kullanıldıktan sonra tuşu sıfırla
+                hall.placeLuringGem(gemX, gemY, direction);
+                keyboard.b = false;
             }
         }
 
-        // Activate Reveal Rune on pressing 'R'
         if (keyboard.r) {
 
         }
 
-        // Activate cloak on pressing 'P'
         if (keyboard.p && !cloakActive && removeFromInventory(new CloakOfProtection())) {
             activateCloak();
         }
@@ -121,7 +117,6 @@ public class Hero extends Entity {
             deactivateCloak();
         }
 
-        // Open Objects
         if (keyboard.q) {
             Entity c = hall.checkForObjects();
             if (c != null){
@@ -131,7 +126,7 @@ public class Hero extends Entity {
         }
 
         if (currentTime - lastMoveTime < moveDelay) {
-            return; // Movement delay
+            return;
         }
 
         boolean moved = false;
@@ -139,7 +134,7 @@ public class Hero extends Entity {
         if (keyboard.up && yPosition > 0 && hall.isPositionEmpty(xPosition, yPosition - 1)) {
             yPosition--;
             if (!direction.equals("up")) {
-                currentFrame = 0; // Reset animation
+                currentFrame = 0;
             }
             direction = "up";
             moved = true;
@@ -173,39 +168,35 @@ public class Hero extends Entity {
         }
 
         if (moved) {
-            currentFrame = (currentFrame + 1) % 2; // Toggle frames 0-1
+            currentFrame = (currentFrame + 1) % 2;
             lastMoveTime = currentTime;
         }
     }
 
     // Decrease hero health
     public void decreaseHealth() {
-        if (!cloakActive) { // Health decreases only if cloak isn't active
+        if (!cloakActive) {
             if (health > 0) {
                 health--;
                 System.out.println("Hero health decreased to: " + health);
             }
             if (health == 0) {
                 System.out.println("Game Over!");
-                // Add logic to end the game
             }
         }
     }
 
-    // Activate the cloak
     private void activateCloak() {
         this.cloakActive = true;
         this.cloakStartTime = System.currentTimeMillis();
         System.out.println("Cloak activated! Duration: 20 seconds");
     }
 
-    // Deactivate the cloak
     private void deactivateCloak() {
         this.cloakActive = false;
         System.out.println("Cloak expired!");
     }
 
-    // Check if cloak is active
     public boolean isCloakActive() {
         return cloakActive;
     }
@@ -219,17 +210,15 @@ public class Hero extends Entity {
     public long getRemainingCloakTime() {
         if (cloakActive) {
             long elapsedTime = System.currentTimeMillis() - cloakStartTime;
-            return (cloakDuration - elapsedTime) / 1000; // Remaining time in seconds
+            return (cloakDuration - elapsedTime) / 1000;
         }
         return 0;
     }
 
-    // Return hero health
     public int getHealth() {
         return health;
     }
 
-    // Render hero sprite
     @Override
     public Image getSprite() {
         if (isCloakActive()) {

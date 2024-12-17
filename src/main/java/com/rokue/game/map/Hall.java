@@ -8,8 +8,8 @@ import com.rokue.game.entities.*;
 import com.rokue.game.entities.GameObject;
 
 public class Hall {
-    public static final int tiles = 18; // Harita boyutu
-    public static final int pixelsPerTile = 16; // Her karenin piksel boyutu
+    public static final int tiles = 18;
+    public static final int pixelsPerTile = 16;
 
     private final Entity[][] grid = new Entity[tiles][tiles];
     private final Set<Enchantment> enchantments = new HashSet<>();
@@ -17,15 +17,13 @@ public class Hall {
     private final Set<Monster> monsters = new HashSet<>();
     private final Set<Entity> others = new HashSet<>();
     private final Random random = new Random();
-    private Hero hero; // Hero referansı
+    private Hero hero;
     private Rune rune = new Rune();
 
-    // Hero'yu ayarlama metodu
     public void setHero(Hero hero) {
         this.hero = hero;
     }
 
-    // Hero'yu alma metodu
     public Hero getHero() {
         return hero;
     }
@@ -53,8 +51,8 @@ public class Hall {
 
 
     public void removeEntity(Entity entity) {
-        grid[entity.getXPosition()][entity.getYPosition()] = null; // Grid'den kaldır
-        if (entity instanceof Monster){ // Set'ten kaldır
+        grid[entity.getXPosition()][entity.getYPosition()] = null;
+        if (entity instanceof Monster){
             monsters.remove(entity);
         }
         else if (entity instanceof GameObject) {
@@ -84,7 +82,7 @@ public class Hall {
 
     public boolean isPositionEmpty(int x, int y) {
         if (x < 0 || x >= tiles || y < 0 || y >= tiles) {
-            return false; // Harita sınırları dışı dolu kabul edilir
+            return false;
         }
         return grid[x][y] == null;
     }
@@ -97,16 +95,14 @@ public class Hall {
             if (e instanceof LuringGem) {
                 LuringGem gem = (LuringGem) e;
 
-                // Tüm Fighter Monster'ları kontrol et
                 for (Monster potentialFighter : monsters) {
                     if (potentialFighter instanceof Fighter) {
                         Fighter fighter = (Fighter) potentialFighter;
 
-                        // Eğer Fighter Monster, Luring Gem'in pozisyonundaysa
                         if (Math.abs(fighter.getXPosition() - gem.getXPosition()) <= 2 &&
                                 Math.abs(fighter.getYPosition() - gem.getYPosition()) <= 2) {
                             allFightersReached &= true;
-                            toRemove.add(gem); // Luring Gem'i kaldırılacak listeye ekle
+                            toRemove.add(gem);
                         }
                         else allFightersReached &= false;
                     }
@@ -114,7 +110,6 @@ public class Hall {
             }
         }
 
-        // İterasyondan sonra Luring Gem'leri kaldır
         if (allFightersReached) {
             for (Entity entity : toRemove) {
                 removeEntity(entity);
@@ -167,17 +162,17 @@ public class Hall {
 
     public void placeRandomCrate() {
         int x, y;
-        int centerX = tiles / 2; // Haritanın merkez noktası (X)
-        int centerY = tiles / 2; // Haritanın merkez noktası (Y)
-        int radius = 4; // Crate'lerin merkez çevresindeki alanı
+        int centerX = tiles / 2;
+        int centerY = tiles / 2;
+        int radius = 4;
 
         do {
             x = centerX - radius + random.nextInt(2 * radius + 1);
             y = centerY - radius + random.nextInt(2 * radius + 1);
-        } while (!isPositionEmpty(x, y)); // Pozisyon doluysa yeniden seç
+        } while (!isPositionEmpty(x, y));
 
         Crate crate = new Crate();
-        crate.place(x, y); // Crate'i belirlenen pozisyona yerleştir
+        crate.place(x, y);
 
         if (!rune.isPositionSet()) {
             rune.setPosition(crate.getXPosition(), crate.getYPosition());
@@ -186,7 +181,7 @@ public class Hall {
 
         addEntity(crate, x, y);
 
-        System.out.println("Crate added at: (" + x + ", " + y + ")"); // Debugging için koordinat yazdır
+        System.out.println("Crate added at: (" + x + ", " + y + ")");
     }
 
     public void placeRandomArcher() {
@@ -229,7 +224,6 @@ public class Hall {
         LuringGem luringGem = new LuringGem();
         luringGem.place(x, y, this);
 
-        // Fighter Monster'lara gem'in yerini bildir
         for (Monster monster : monsters) {
             if (monster instanceof Fighter) {
                 ((Fighter) monster).followLuringGem(x, y);

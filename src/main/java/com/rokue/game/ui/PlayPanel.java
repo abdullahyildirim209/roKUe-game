@@ -102,10 +102,8 @@ public class PlayPanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // Draw background
         g2.drawImage(background, 0, 0, screenWidth, screenHeight, null);
 
-        // Draw all entities (including monsters)
         for (Monster monser : hall.getMonsters()) {
             g2.drawImage(
                     monser.getSprite(),

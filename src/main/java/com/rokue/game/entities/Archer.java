@@ -44,6 +44,6 @@ public class Archer extends Monster {
 
     @Override
     public Image getSprite() {
-        return sprite; // Tek görseli döndür
+        return sprite;
     }
 }
