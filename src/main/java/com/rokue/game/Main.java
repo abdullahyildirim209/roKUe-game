@@ -15,9 +15,10 @@ public class Main {
         window.setTitle("RoKUe");
 
         Hall hall = new Hall();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) { // 10 rastgele crate yerleştir
             hall.placeRandomCrate();
         }
+        hall.placeRandomHeartChest();
 
         PlayPanel playPanel = new PlayPanel(hall);
         window.add(playPanel);
@@ -26,6 +27,6 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        playPanel.startGameThread();
+        playPanel.startGameThread(); // Oyun döngüsünü başlat
     }
 }

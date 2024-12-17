@@ -1,5 +1,4 @@
 package com.rokue.game.entities;
-
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import com.rokue.game.map.Hall;

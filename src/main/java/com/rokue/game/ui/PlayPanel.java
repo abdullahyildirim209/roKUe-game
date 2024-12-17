@@ -43,7 +43,7 @@ public class PlayPanel extends JPanel implements Runnable {
 
         this.background = new ImageIcon(getClass().getResource("/sprites/hall.png")).getImage();
 
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Pencere boyutu
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
@@ -55,7 +55,6 @@ public class PlayPanel extends JPanel implements Runnable {
         for (int i = 0; i < 3; i++) {
             hall.placeRandomFighter();
         }
-
         hall.placeRandomWizard();
     }
 

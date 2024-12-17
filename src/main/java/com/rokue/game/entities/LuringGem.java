@@ -11,9 +11,11 @@ public class LuringGem extends Enchantment {
     private Hall hall;
     private int direction;
     private Image sprite;
+    private boolean active;
 
     public LuringGem() {
         super();
+        active = false;
         sprite = new ImageIcon(getClass().getResource("/sprites/objects/LuringGem.png")).getImage();
     }
 
@@ -21,6 +23,7 @@ public class LuringGem extends Enchantment {
         this.xPosition = x;
         this.yPosition = y;
         this.hall = hall;
+        active = true;
     }
 
     public void setDirection(int direction) {
@@ -31,10 +34,12 @@ public class LuringGem extends Enchantment {
         return direction;
     }
 
-    @Override
-    public void update() {
-
+    public boolean isActive() {
+        return active;
     }
+
+    @Override
+    public void update() { return; }
 
     @Override
     public Image getSprite() {

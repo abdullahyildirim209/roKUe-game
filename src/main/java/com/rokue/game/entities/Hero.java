@@ -1,6 +1,8 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.util.Arrays;
+
 import javax.swing.ImageIcon;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
@@ -13,14 +15,14 @@ public class Hero extends Entity {
     private Image cloakLeftSprite;
     private Image cloakRightSprite;
     private long lastMoveTime = 0;
-    private final long moveDelay = 200;
-    private String direction = "down";
-    private int health = 3;
+    private final long moveDelay = 200; // Movement delay (ms)
+    private String direction = "down"; // Default movement direction
+    private int health = 3; // Hero's health
     private int[] inventory = {1, 1, 1};
 
     private boolean cloakActive = false;
-    private long cloakStartTime = 0;
-    private final long cloakDuration = 20000;
+    private long cloakStartTime = 0; // When the cloak was activated
+    private final long cloakDuration = 20000; // Cloak duration (20 seconds in ms)
 
     // Constructor
     public Hero(Keyboard keyboard) {
@@ -75,40 +77,58 @@ public class Hero extends Entity {
         }
     }
 
+    public void getEnchantments(Enchantment e) {
+        if (e instanceof ExtraLife) {
+            health++;
+        }
+        else if (e instanceof ExtraTime) {
+
+        }
+        else addToInventory(e);
+
+        hall.removeEntity(e);
+        System.out.println(Arrays.toString(inventory));
+    }
+
     @Override
     public void update() {
         long currentTime = System.currentTimeMillis();
 
+        // Throw Luring Gem on pressing 'B'
         if (keyboard.b) {
 
             int gemX = xPosition;
             int gemY = yPosition;
             int direction = -1;
 
+            // Kullanıcı hangi yöne Luring Gem atmak istiyor
             if (keyboard.a) {
-                gemX--;
+                gemX--; // Sol
                 direction = 0;
             } else if (keyboard.d) {
-                gemX++;
+                gemX++; // Sağ
                 direction = 1;
             } else if (keyboard.w) {
-                gemY--;
+                gemY--; // Yukarı
                 direction = 2;
             } else if (keyboard.s) {
-                gemY++;
+                gemY++; // Aşağı
                 direction = 3;
             }
 
             if (direction != -1 && hall.isPositionEmpty(gemX, gemY) && removeFromInventory(new LuringGem())) {
-                hall.placeLuringGem(gemX, gemY, direction);
-                keyboard.b = false;
+                hall.placeLuringGem(gemX, gemY, direction); // Hall'da Luring Gem yerleştir
+                keyboard.b = false; // Luring Gem kullanıldıktan sonra tuşu sıfırla
             }
         }
 
-        if (keyboard.r) {
-
+        // Activate Reveal Rune on pressing 'R'
+        if (keyboard.r && removeFromInventory(new RevealRune())) {
+            hall.revealRune();
+            keyboard.r = false;
         }
 
+        // Activate cloak on pressing 'P'
         if (keyboard.p && !cloakActive && removeFromInventory(new CloakOfProtection())) {
             activateCloak();
         }
@@ -117,6 +137,7 @@ public class Hero extends Entity {
             deactivateCloak();
         }
 
+        // Open Objects
         if (keyboard.q) {
             Entity c = hall.checkForObjects();
             if (c != null){
@@ -125,8 +146,17 @@ public class Hero extends Entity {
             keyboard.q = false;
         }
 
+        // Get Enchantments
+        if (keyboard.z) {
+            Entity x = hall.checkForEnchantments();
+            if (x != null) {
+                getEnchantments((Enchantment) x);
+                keyboard.z = false;
+            }
+        }
+
         if (currentTime - lastMoveTime < moveDelay) {
-            return;
+            return; // Movement delay
         }
 
         boolean moved = false;
@@ -134,7 +164,7 @@ public class Hero extends Entity {
         if (keyboard.up && yPosition > 0 && hall.isPositionEmpty(xPosition, yPosition - 1)) {
             yPosition--;
             if (!direction.equals("up")) {
-                currentFrame = 0;
+                currentFrame = 0; // Reset animation
             }
             direction = "up";
             moved = true;
@@ -168,35 +198,39 @@ public class Hero extends Entity {
         }
 
         if (moved) {
-            currentFrame = (currentFrame + 1) % 2;
+            currentFrame = (currentFrame + 1) % 2; // Toggle frames 0-1
             lastMoveTime = currentTime;
         }
     }
 
     // Decrease hero health
     public void decreaseHealth() {
-        if (!cloakActive) {
+        if (!cloakActive) { // Health decreases only if cloak isn't active
             if (health > 0) {
                 health--;
                 System.out.println("Hero health decreased to: " + health);
             }
             if (health == 0) {
                 System.out.println("Game Over!");
+                // Add logic to end the game
             }
         }
     }
 
+    // Activate the cloak
     private void activateCloak() {
         this.cloakActive = true;
         this.cloakStartTime = System.currentTimeMillis();
         System.out.println("Cloak activated! Duration: 20 seconds");
     }
 
+    // Deactivate the cloak
     private void deactivateCloak() {
         this.cloakActive = false;
         System.out.println("Cloak expired!");
     }
 
+    // Check if cloak is active
     public boolean isCloakActive() {
         return cloakActive;
     }
@@ -210,15 +244,17 @@ public class Hero extends Entity {
     public long getRemainingCloakTime() {
         if (cloakActive) {
             long elapsedTime = System.currentTimeMillis() - cloakStartTime;
-            return (cloakDuration - elapsedTime) / 1000;
+            return (cloakDuration - elapsedTime) / 1000; // Remaining time in seconds
         }
         return 0;
     }
 
+    // Return hero health
     public int getHealth() {
         return health;
     }
 
+    // Render hero sprite
     @Override
     public Image getSprite() {
         if (isCloakActive()) {

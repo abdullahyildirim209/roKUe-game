@@ -4,16 +4,12 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import com.rokue.game.map.Hall;
-
-public class RevealRune extends Enchantment {
-    private Hall hall;
+public class ExtraTime extends Enchantment {
     private Image sprite;
 
-    public RevealRune() {
+    public ExtraTime() {
         super();
-        sprite = new ImageIcon(getClass().getResource("/sprites/objects/RevealRune.png")).getImage();
-
+        sprite = new ImageIcon(getClass().getResource("/sprites/objects/ExtraTime.png")).getImage();
     }
 
     @Override
