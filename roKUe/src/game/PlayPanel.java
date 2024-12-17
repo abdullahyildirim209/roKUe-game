@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PlayPanel extends JPanel implements Runnable {
@@ -38,7 +39,9 @@ public class PlayPanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
-    }
+}
+    
+
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -85,6 +88,24 @@ public class PlayPanel extends JPanel implements Runnable {
     }
 
     void update() {
+        //Help Panel stuff
+        if (keyboard.helpPressed) {
+            fps = 0;
+            // Show the HelpPanel as a dialog
+            HelpPanel helpPanel = new HelpPanel();
+            JOptionPane.showMessageDialog(
+                this, 
+                helpPanel, 
+                "Help", 
+                JOptionPane.PLAIN_MESSAGE
+            );
+    
+            // Reset the flag so it doesn't show repeatedly
+            keyboard.helpPressed = false;
+            fps = 60;
+        }
+        //Help Panel stuff
+        
         if (halls[currentHallNo].heroExit) {
             if (currentHallNo == 3) {
                 System.out.println("You escaped.");

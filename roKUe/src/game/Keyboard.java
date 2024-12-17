@@ -7,6 +7,7 @@ public class Keyboard implements KeyListener {
 
     boolean up, down, left, right;
     boolean use, useLock;
+    boolean helpPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {} // unused but required due to implemented interface
@@ -33,6 +34,13 @@ public class Keyboard implements KeyListener {
                 useLock = true;
             }
         }
+        if (code == KeyEvent.VK_H) {
+        helpPressed = true;
+        left = false;
+        right = false;
+        up = false;
+        down = false;
+    }
     }
 
     @Override
@@ -53,6 +61,9 @@ public class Keyboard implements KeyListener {
         }
         if (code == KeyEvent.VK_C) {
             useLock = false;
+        }
+        if (code == KeyEvent.VK_H) {
+            helpPressed = false;
         }
     }
 }
