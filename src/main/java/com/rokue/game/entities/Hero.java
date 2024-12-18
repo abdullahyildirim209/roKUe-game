@@ -133,7 +133,7 @@ public class Hero extends Character {
 
     // Throw Luring Gem on pressing 'B'
     public void throwLuringGem() {
-        if (keyboard.b) {
+        if (hall.getActiveLuringGem() == null && keyboard.b) {
             int gemX = xPosition;
             int gemY = yPosition;
             int direction = -1;
@@ -244,8 +244,6 @@ public class Hero extends Character {
         selectedProp = hall.getProp(getObservedTilePosition());
         if (selectedProp != null) selectedProp.selected = 1;
     }
-
-    
  
     public void selectEnchantment() {
         if (selectedEnchantment != null) selectedEnchantment.setSelected(false);

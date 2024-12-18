@@ -1,6 +1,9 @@
 package com.rokue.game.map;
 
 import java.util.HashSet;
+
+import javax.print.attribute.standard.Finishings;
+
 import com.rokue.game.utils.RNG;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.ExtraTime;
@@ -34,6 +37,7 @@ public class Hall {
     boolean revealRuneactive = false; 
     long lastEnchantmentTime = 0;
     Enchantment lastEnchantment = null;
+    LuringGem activeLuringGem = null;
     RNG RNG;
     
     public Hall(RNG RNG) {
@@ -117,10 +121,12 @@ public class Hall {
     }
 
     public void update() {
+        // RevealRune deactivate
         if (System.currentTimeMillis() - lastRevealRuneTime > 10000) {
             deactivateRevealRune();
         }
 
+        // Random enchantment spawn
         if (System.currentTimeMillis() - lastEnchantmentTime > 12000) {
             lastEnchantmentTime = System.currentTimeMillis();
             int x = RNG.nextInt(4);
@@ -146,11 +152,40 @@ public class Hall {
             lastEnchantment = e;
         }
 
+        // Enchantment delete if not picked
         if (System.currentTimeMillis() - lastEnchantmentTime > 6000 && lastEnchantment != null) {
             enchantments.remove(lastEnchantment); 
             grid[lastEnchantment.getXPosition()][lastEnchantment.getYPosition()] = null;
             lastEnchantment = null;
         } 
+
+        // Delete LuringGem if all fighters are nearby
+        if (activeLuringGem != null) {
+            boolean allFightersReached = true;
+
+            for (Character c : characters) {
+                if (c instanceof Fighter) {
+                    Fighter f = (Fighter) c;
+                    if (Math.abs(f.getXPosition() - activeLuringGem.getXPosition()) <= 2 && Math.abs(f.getYPosition() - activeLuringGem.getYPosition()) <= 2) {
+                        allFightersReached &= true;
+                    }
+                    else allFightersReached &= false;
+                }
+            }
+
+            if (allFightersReached) {
+                grid[activeLuringGem.getXPosition()][activeLuringGem.getYPosition()] = null;
+                enchantments.remove(activeLuringGem);
+                activeLuringGem = null;
+
+                for (Character c : characters) {
+                    if (c instanceof Fighter) {
+                        ((Fighter) c).reset();
+                    }
+                }
+            }
+        }
+
 
     }
 
@@ -220,15 +255,23 @@ public class Hall {
     }
 
     public void placeLuringGem(int x, int y) {
-        LuringGem l = new LuringGem();
-        l.setPickable(false);
-        l.place(x, y, this);
+        if (activeLuringGem != null) return;
+        else {
+            LuringGem l = new LuringGem();
+            l.setPickable(false);
+            l.place(x, y, this);
+            activeLuringGem = l;
 
-        for (Character f : characters) {
-            if (f instanceof Fighter) {
-                ((Fighter) f).followLuringGem();
+            for (Character f : characters) {
+                if (f instanceof Fighter) {
+                    ((Fighter) f).followLuringGem();
+                }
             }
         }
+    }
+
+    public LuringGem getActiveLuringGem() {
+        return activeLuringGem;
     }
 
     public void revealRune() {
