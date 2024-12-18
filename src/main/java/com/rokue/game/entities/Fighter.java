@@ -14,6 +14,9 @@ public class Fighter extends Character{
     private int targetX = -1;
     private int targetY = -1;
     private boolean moved = false;
+    private final long randomMoveTime = 300;
+    private long lastRandomMove = 0;
+    private int randomMoveDirection = 0;
 
     public Fighter() {
         super();
@@ -36,7 +39,7 @@ public class Fighter extends Character{
         }
 
         if (followLuringGem && targetX != -1 && targetY != -1) {
-            moveTowards(targetX, targetY);
+            moveTowards(targetX, targetY, false);
         }
 
         else {
@@ -54,7 +57,7 @@ public class Fighter extends Character{
             }
             // If the Hero is within 3 tiles, move towards the Hero
             else if (dx + dy <= 3) {
-                moveTowards(heroX, heroY);
+                moveTowards(heroX, heroY, false);
             }
             // Otherwise, move randomly
             else {
@@ -71,7 +74,7 @@ public class Fighter extends Character{
         targetY = -1;
     }
 
-    public void moveTowards(int x, int y) {
+    public void moveTowards(int x, int y, boolean calledByRandomMove) {
         if (moved) {
             if (xPosition > x && !checkLeftCollision()) xPixelPosition--;
             else if (xPosition < x && !checkRightCollision()) xPixelPosition++;
@@ -79,7 +82,7 @@ public class Fighter extends Character{
             if (yPosition > y && !checkUpCollision()) yPixelPosition--;
             else if (yPosition < y && !checkDownCollision()) yPixelPosition++;
 
-            if (((xPosition > x && checkLeftCollision()) || (xPosition < x && checkRightCollision()) || xPosition == x) && ((yPosition > y && checkUpCollision()) || (yPosition < y && checkDownCollision()) || yPosition == y))
+            if (!calledByRandomMove && ((xPosition > x && checkLeftCollision()) || (xPosition < x && checkRightCollision()) || xPosition == x) && ((yPosition > y && checkUpCollision()) || (yPosition < y && checkDownCollision()) || yPosition == y))
                 randomMove();
 
             moveTo((xPixelPosition + 8) / 16, (yPixelPosition + 15) / 16);
@@ -89,6 +92,19 @@ public class Fighter extends Character{
     }
 
     public void randomMove() {
+        if (System.currentTimeMillis() - lastRandomMove > randomMoveTime) {
+            lastRandomMove = System.currentTimeMillis();
+            randomMoveDirection = hall.getRNG().nextInt(4);
+        }
+
+        if (randomMoveDirection == 0)
+            moveTowards(xPosition + 1, yPosition, true);
+        else if (randomMoveDirection == 1)
+            moveTowards(xPosition - 1, yPosition, true);
+        else if (randomMoveDirection == 2)
+            moveTowards(xPosition, yPosition + 1, true);
+        else if (randomMoveDirection == 3)
+            moveTowards(xPosition, yPosition - 1, true);
 
     }
 

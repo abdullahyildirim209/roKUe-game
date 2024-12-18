@@ -1,9 +1,6 @@
 package com.rokue.game.map;
 
 import java.util.HashSet;
-
-import javax.print.attribute.standard.Finishings;
-
 import com.rokue.game.utils.RNG;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.ExtraTime;
