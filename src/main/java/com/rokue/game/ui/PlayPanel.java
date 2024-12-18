@@ -6,58 +6,46 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import com.rokue.game.entities.Enchantment;
-import com.rokue.game.entities.Entity;
-import com.rokue.game.entities.GameObject;
-import com.rokue.game.entities.Hero;
-import com.rokue.game.entities.Monster;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
+import com.rokue.game.entities.Entity;
+import com.rokue.game.entities.Hero;
+import com.rokue.game.entities.Character;
 
 public class PlayPanel extends JPanel implements Runnable {
-    public static final int tileSize = 16;
-    public static final int scale = 3;
-    public static final int tileSizeScaled = tileSize * scale;
-    public static final int maxTiles = 18;
+    final int scale = 3; // 1x1 pixel is shown as 4x4 pixels on screen
+    final int scaledTileSize = Hall.getPixelsPerTile() * scale;
 
-    public static final int screenWidth = tileSizeScaled * maxTiles;
-    public static final int screenHeight = tileSizeScaled * maxTiles;
+    final int screenWidth = 266 * scale;
+    final int screenHeight = 360 * scale; 
 
-    private final Hall hall;
-    private final Hero hero;
-    private final Keyboard keyboard;
-    private Thread gameThread;
+    final int xOffset = -11 * scale;
+    final int yOffset = 38 * scale;
 
-    private final Image background;
+    int fps = 60;
 
-    public PlayPanel(Hall hall) {
-        this.hall = hall;
-        this.keyboard = new Keyboard();
-        this.hero = new Hero(keyboard);
+    Keyboard keyboard = new Keyboard();
+    Hero hero = new Hero(keyboard);
+    Hall[] halls;
+    int currentHallNo = 0;
+    SpriteLoader spriteLoader;
 
-        this.hall.setHero(this.hero);
+    Thread gameThread;
 
-        // Arka planı yükleme
-        this.background = new ImageIcon(getClass().getResource("/sprites/hall.png")).getImage();
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader) {
+        this.halls = halls;
+        this.spriteLoader = spriteLoader;
+        hero.randomlyPlace(halls[currentHallNo]);
+        halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
+        halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());
 
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Pencere boyutu
-        this.setBackground(Color.BLACK); // Arkaplan rengi
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
-        hero.place(1, 1, hall);
-
-        for (int i = 0; i < 2; i++) {
-            hall.placeRandomArcher();
-        }
-        for (int i = 0; i < 3; i++) {
-            hall.placeRandomFighter();
-        }
-        hall.placeRandomWizard();
     }
 
     public void startGameThread() {
@@ -67,119 +55,109 @@ public class PlayPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        double drawInterval = 1000000000 / fps;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+
+        long timer = 0;
+        int drawCount = 0;
+
         while (gameThread != null) {
-            update();
-            repaint();
-            try {
-                Thread.sleep(100 / 30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            timer += (currentTime - lastTime);
+            lastTime = currentTime;
+
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+                drawCount++;
+            }
+
+            if (timer >= 1000000000) {
+                System.out.println("Time: " + halls[currentHallNo].getTime());
+                if (halls[currentHallNo].getTime() == 0) {
+                    System.out.println("You ran out of time.");
+                    while(true);
+                }
+                System.out.println("FPS: " + drawCount);
+                System.out.println("X: " + hero.getXPixelPosition() +" Y:" + hero.getYPixelPosition());
+                System.out.println();
+                drawCount = 0;
+                timer = 0;
+                halls[currentHallNo].setTime(halls[currentHallNo].getTime() - 1);
             }
         }
     }
 
-    private void update() {
+    void update() {
+        if (halls[currentHallNo].isHeroExit()) {
+            if (currentHallNo == 3) {
+                System.out.println("You escaped.");
+                while(true);
+            }
+            currentHallNo++;
+            spriteLoader.currentHallNo++;
+            hero.randomlyPlace(halls[currentHallNo]);
+            halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());
+            halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
+        }
+        for (Character character : halls[currentHallNo].getCharacters()) character.update();
 
-        hall.processEntities();
-        hero.update();
-
-        for (Monster monster : hall.getMonsters()) {
-            monster.update();
-        }
-        for (GameObject object : hall.getObjects()) {
-            object.update();
-        }
-        for (Enchantment enchantment : hall.getEnchantments()) {
-            enchantment.update();
-        }
-        for (Entity entity : hall.getOthers()) {
-            entity.update();
-        }
-
+        halls[currentHallNo].update();
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D)g;
 
-        // Draw background
-        g2.drawImage(background, 0, 0, screenWidth, screenHeight, null);
+        g2.drawImage(spriteLoader.hallSprites[0], 0,0, screenWidth, screenHeight, null);
 
-        // Draw all entities (including monsters)
-        for (Monster monser : hall.getMonsters()) {
-            g2.drawImage(
-                    monser.getSprite(),
-                    monser.getXPixelPosition() * scale,
-                    monser.getYPixelPosition() * scale,
-                    tileSizeScaled,
-                    tileSizeScaled,
-                    null
-            );
+        g2.setColor(new Color(0, 0, 0, 64));
+        Entity entity;
+        for (int y = 0; y < Hall.getTiles(); y++) {
+            for (int x = 0; x < Hall.getTiles(); x++) {
+                entity = halls[currentHallNo].getGrid()[x][y];
+                if (entity != null) {
+                    g2.drawImage(entity.getSprite(spriteLoader), entity.getXPixelPosition() * scale + xOffset, entity.getYPixelPosition() * scale + yOffset, entity.getWidth() * scaledTileSize, entity.getHeight() * scaledTileSize, null);
+                    if (entity.getShadow()) {
+                        g2.fillRect(entity.getShadowX() * scale + xOffset, entity.getShadowY() * scale + yOffset, entity.getShadowWidth() * scale, entity.getShadowHeight() * scale);
+                    }
+                }
+            }
         }
 
-        for (GameObject object : hall.getObjects()) {
-            g2.drawImage(
-                    object.getSprite(),
-                    object.getXPixelPosition() * scale,
-                    object.getYPixelPosition() * scale,
-                    tileSizeScaled,
-                    tileSizeScaled,
-                    null
-            );
-        }
-
-        for (Enchantment enchantment : hall.getEnchantments()) {
-            g2.drawImage(
-                    enchantment.getSprite(),
-                    enchantment.getXPixelPosition() * scale,
-                    enchantment.getYPixelPosition() * scale,
-                    tileSizeScaled,
-                    tileSizeScaled,
-                    null
-            );
-        }
-
-        for (Entity entity : hall.getOthers()) {
-            g2.drawImage(
-                    entity.getSprite(),
-                    entity.getXPixelPosition() * scale,
-                    entity.getYPixelPosition() * scale,
-                    tileSizeScaled,
-                    tileSizeScaled,
-                    null
-            );
-        }
-
-        g2.drawImage(
-                hero.getSprite(),
-                hero.getXPosition() * tileSizeScaled,
-                hero.getYPosition() * tileSizeScaled,
-                tileSizeScaled,
-                tileSizeScaled,
-                null
-        );
-
+        g2.drawImage(spriteLoader.hallSprites[1], 0,0, screenWidth, screenHeight - 34 * scale, null);
+        
         g2.setColor(Color.RED);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
-        g2.drawString("Health: " + hall.getHero().getHealth(), screenWidth - 150, 30);
+        g2.drawString("Health: " + halls[currentHallNo].getHero().getHealth(), screenWidth - 100, 30);
 
         if (hero.isCloakActive()) {
             long remainingTime = (hero.getCloakDuration() - (System.currentTimeMillis() - hero.getCloakStartTime())) / 1000;
-            g2.setColor(Color.BLUE);
-            g2.drawString("Cloak Time: " + remainingTime + "s", screenWidth / 2 - 50, 30);
+            g2.setColor(Color.CYAN);
+            g2.drawString("Cloak Time: " + remainingTime + "s", screenWidth / 2 - 73, 30);
         }
 
-        if (hall.isRevealRuneActive()) {
-            int x = hall.getRevealRuneX() * tileSizeScaled;
-            int y = hall.getRevealRuneY() * tileSizeScaled;
-            int w = 4 * tileSizeScaled;
-            int h = 4 * tileSizeScaled;
-            g2.setColor(new Color(50, 255, 50, 50)); 
+        g2.setColor(Color.GREEN);
+        g2.drawString("Remaining Time: " + halls[currentHallNo].getTime() + "s" , 10, 30);
+
+        if (halls[currentHallNo].isRevealRuneActive()) {
+            int x = halls[currentHallNo].getRevealRuneX() * scaledTileSize - 33;
+            int y = halls[currentHallNo].getRevealRuneY() * scaledTileSize + 113;
+            int w = 4 * scaledTileSize;
+            int h = 4 * scaledTileSize;
+            g2.setColor(new Color(50, 255, 50, 40)); 
             g2.fillRect(x, y, w, h);
-            g2.setColor(new Color(80, 255, 120, 100)); 
+            g2.setColor(new Color(80, 255, 120, 70)); 
             g2.setStroke(new BasicStroke(2));
             g2.drawRect(x, y, w, h);
         }
+
+        g2.dispose();
     }
+
 }

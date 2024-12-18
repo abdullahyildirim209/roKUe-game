@@ -1,48 +1,30 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
-import javax.swing.ImageIcon;
 
 import com.rokue.game.map.Hall;
-
-
+import com.rokue.game.ui.SpriteLoader;
 
 public class LuringGem extends Enchantment {
-    private Hall hall;
-    private int direction;
-    private Image sprite;
-    private boolean active;
 
     public LuringGem() {
         super();
-        active = false;
-        sprite = new ImageIcon(getClass().getResource("/sprites/objects/LuringGem.png")).getImage();
+        
+        collisionX = 3;
+        collisionY = 0;
+        collisionWidth = Hall.getPixelsPerTile() - 6;
+        collisionHeight = Hall.getPixelsPerTile() + 2;
+        collisionArea.width = collisionWidth;
+        collisionArea.height = collisionHeight;
     }
-
-    public void place(int x, int y, Hall hall) {
-        this.xPosition = x;
-        this.yPosition = y;
-        this.hall = hall;
-        active = true;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
+    
 
     @Override
-    public void update() { return; }
+    public void update() { }
 
     @Override
-    public Image getSprite() {
-        return sprite;
+    public Image getSprite(SpriteLoader spriteLoader) {
+        return spriteLoader.getEnchantmentSprites()[(pickable && selected) ? 6 : 2];
     }
+    
 }

@@ -1,211 +1,243 @@
 package com.rokue.game.map;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-import com.rokue.game.entities.*;
+import com.rokue.game.utils.RNG;
+import com.rokue.game.entities.Entity;
+import com.rokue.game.entities.ExtraTime;
+import com.rokue.game.entities.Fighter;
+import com.rokue.game.entities.Hero;
+import com.rokue.game.entities.LuringGem;
+import com.rokue.game.entities.Prop;
+import com.rokue.game.entities.RevealRune;
+import com.rokue.game.entities.Character;
+import com.rokue.game.entities.CloakOfProtection;
+import com.rokue.game.entities.Enchantment;
+
 
 public class Hall {
-    public static final int tiles = 18; // Harita boyutu
-    public static final int pixelsPerTile = 16; // Her karenin piksel boyutu
+    static final int tiles = 18; // effectively 16x16 grid (outer part is filled with invisible props to act as walls)
+    static final int pixelsPerTile = 16; // 16x16 pixel squares
 
-    private final Entity[][] grid = new Entity[tiles][tiles];
-    private final Set<Enchantment> enchantments = new HashSet<>();
-    private final Set<GameObject> objects = new HashSet<>();
-    private final Set<Monster> monsters = new HashSet<>();
-    private final Set<Entity> others = new HashSet<>();
-    private final Random random = new Random();
-    private Hero hero; // Hero referansı
-    private Rune rune = new Rune();
+    boolean heroExit = false; // true when hero leaves through the door, playMode switches to the next hall when true
+    boolean doorOpen = false;
+    public Prop runeHolder;
+    int time;
+    Entity[][] grid = new Entity[tiles][tiles];
+    HashSet<Character> characters = new HashSet<>();
+    Hero hero = null;
+    HashSet<Prop> props = new HashSet<>();
+    HashSet<Prop> nonRuneProps = new HashSet<>();
+    HashSet<Enchantment> enchantments = new HashSet<>();
+    long lastRevealRuneTime = 0;
+    int revealRuneX = 0;
+    int revealRuneY = 0;
+    boolean revealRuneactive = false; 
+    long lastEnchantmentTime = 0;
+    Enchantment lastEnchantment = null;
+    RNG RNG;
+    
+    public Hall(RNG RNG) {
+        this.RNG = RNG;
 
-    private boolean revealRuneactive = false;
-    private long lastRevealRuneTime = 0;
-    private int revealRuneX = 0;
-    private int revealRuneY = 0;
-
-    // Hero'yu ayarlama metodu
-    public void setHero(Hero hero) {
-        this.hero = hero;
+        // cover the outer edges with invisible props to prevent going out of bounds
+        for (int y = 0; y < tiles; y++) {
+            for (int x = 0; x < tiles; x++) {
+                if (y == 0 && (x == 8 || x == 9)) { // add the door
+                    new Prop(x - 8).place(x, y, this);
+                } else if (y == 0 || y == 17 || x == 0 || x == 17) {
+                    new Prop(-1).place(x, y, this);
+                }
+            }
+        }
     }
 
-    // Hero'yu alma metodu
+    public static int getTiles() {
+        return tiles;
+    }
+
+    public static int getPixelsPerTile() {
+        return pixelsPerTile;
+    }
+
+    public boolean isHeroExit() {
+        return heroExit;
+    } 
+    
+    public void setHeroExit(boolean a) {
+        heroExit = a;
+    }
+
+    public boolean isDoorOpen() {
+        return doorOpen;
+    }
+
+    public void setDoorOpen(boolean a) {
+        doorOpen = a;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int t) {
+        time = t;
+    }
+
+    public Entity[][] getGrid() {
+        return grid;
+    }
+
+    public HashSet<Character> getCharacters() {
+        return characters;
+    }
+
     public Hero getHero() {
         return hero;
     }
 
-    public Rune getRune() {
-        return rune;
+    public void setHero(Hero h) {
+        hero = h;
+        lastEnchantmentTime = System.currentTimeMillis();
     }
 
-    public void addEntity(Entity entity, int x, int y) {
-        if (grid[x][y] == null) {
-            grid[x][y] = entity;
-
-            if (entity instanceof Monster){
-                monsters.add((Monster) entity);
-            }
-            else if (entity instanceof GameObject) {
-                objects.add((GameObject) entity);
-            }
-            else if (entity instanceof Enchantment) {
-                enchantments.add((Enchantment) entity);
-            }
-            else others.add(entity);
-        }
-    }
-    
-    public void removeEntity(Entity entity) {
-        grid[entity.getXPosition()][entity.getYPosition()] = null; // Grid'den kaldır
-        if (entity instanceof Monster){ // Set'ten kaldır
-            monsters.remove(entity);
-        }
-        else if (entity instanceof GameObject) {
-            objects.remove(entity);
-        }
-        else if (entity instanceof Enchantment) {
-            enchantments.remove(entity);
-        } 
-        else others.remove(entity);
+    public HashSet<Prop> getProps() {
+        return props;
     }
 
-    public Set<Monster> getMonsters() {
-        return monsters;
+    public HashSet<Prop> getNonRuneProps() {
+        return nonRuneProps;
     }
 
-    public Set<GameObject> getObjects() {
-        return objects;
-    }
-
-    public Set<Enchantment> getEnchantments() {
+    public HashSet<Enchantment> getEnchantments() {
         return enchantments;
     }
-    
-    public Set<Entity> getOthers() {
-        return others;
+
+    public RNG getRNG() {
+        return RNG;
     }
 
-    public boolean isPositionEmpty(int x, int y) {
-        if (x < 0 || x >= tiles || y < 0 || y >= tiles) {
-            return false; // Harita sınırları dışı dolu kabul edilir
-        }
-        return grid[x][y] == null;
-    }
-
-    public Entity getEntityAt(int x, int y) {
-        if (x >= 0 && x < tiles && y >= 0 && y < tiles) {
-            return grid[x][y];
-        }
-        return null;
-    }
-
-    public void processEntities() {
+    public void update() {
         if (System.currentTimeMillis() - lastRevealRuneTime > 10000) {
             deactivateRevealRune();
         }
 
-        Set<Entity> toRemove = new HashSet<>();
-        boolean allFightersReached = true;
+        if (System.currentTimeMillis() - lastEnchantmentTime > 12000) {
+            lastEnchantmentTime = System.currentTimeMillis();
+            int x = RNG.nextInt(4);
+            Enchantment e = null;
+            int[] pos = getRandomEmptyTilePosition();
+            if (x == 0) {
+                e = new CloakOfProtection();
+                e.place(pos[0], pos[1], this);
+            }
+            else if (x == 1) {
+                e = new RevealRune();
+                e.place(pos[0], pos[1], this);
+            }
+            else if (x == 2) {
+                e = new LuringGem();
+                e.place(pos[0], pos[1], this);
+            }
+            else {
+                e = new ExtraTime();
+                e.place(pos[0], pos[1], this);
+            }
 
-        for (Enchantment e : enchantments) {
-            if (e instanceof LuringGem) {
-                LuringGem gem = (LuringGem) e;
+            lastEnchantment = e;
+        }
 
-                // Tüm Fighter Monster'ları kontrol et
-                for (Monster potentialFighter : monsters) {
-                    if (potentialFighter instanceof Fighter) {
-                        Fighter fighter = (Fighter) potentialFighter;
+        if (System.currentTimeMillis() - lastEnchantmentTime > 6000 && lastEnchantment != null) {
+            enchantments.remove(lastEnchantment); 
+            grid[lastEnchantment.getXPosition()][lastEnchantment.getYPosition()] = null;
+            lastEnchantment = null;
+        } 
 
-                        // Eğer Fighter Monster, Luring Gem'in pozisyonundaysa
-                        if (Math.abs(fighter.getXPosition() - gem.getXPosition()) <= 2 &&
-                                Math.abs(fighter.getYPosition() - gem.getYPosition()) <= 2) {
-                            allFightersReached &= true;        
-                            toRemove.add(gem); // Luring Gem'i kaldırılacak listeye ekle
-                        }
-                        else allFightersReached &= false;
+    }
+
+
+    // used for random enemy and hero spawning spawning
+    public int[] getRandomEmptyTilePosition() {
+        int[] position = new int[2];
+        
+        int tileCounter = RNG.nextInt((tiles * tiles) - props.size() - characters.size() - nonRuneProps.size() - enchantments.size());
+
+        for (int y = 0; y < tiles; y++) {
+            for (int x = 0; x < tiles; x++) {
+                if (grid[x][y] == null) {
+                    if (tileCounter == 0) {
+                        position[0] = x;
+                        position[1] = y;
+                        return position;
+                    } else {
+                        tileCounter--;
                     }
                 }
             }
         }
-
-        // İterasyondan sonra Luring Gem'leri kaldır
-        if (allFightersReached) {
-            for (Entity entity : toRemove) {
-                    removeEntity(entity);
-            }
-            
-            for (Monster m : monsters){
-                if (m instanceof Fighter){
-                    ((Fighter) m).reset();
-                }
-            }
-        }
-    }
-
-    public Entity checkForObjects() {
-        int hx = hero.getXPosition();
-        int hy = hero.getYPosition();
-        Entity x = null;
-        if (!isPositionEmpty(hx+1, hy)) {
-            x = getEntityAt(hx+1, hy);
-            if (x instanceof GameObject) return x;
-        }
-        if (!isPositionEmpty(hx, hy+1)) {
-            x = getEntityAt(hx, hy+1);
-            if (x instanceof GameObject) return x;
-        }
-        if (!isPositionEmpty(hx-1, hy)) {
-            x = getEntityAt(hx-1, hy);
-            if (x instanceof GameObject) return x;
-        }
-        if (!isPositionEmpty(hx, hy-1)) {
-            x = getEntityAt(hx, hy-1);
-            if (x instanceof GameObject) return x;
-        }
-
         return null;
     }
 
-    public Entity checkForEnchantments() {
-        int hx = hero.getXPosition();
-        int hy = hero.getYPosition();
-        Entity x = null;
-        if (!isPositionEmpty(hx+1, hy)) {
-            x = getEntityAt(hx+1, hy);
-            if (x instanceof Enchantment) return x;
-        }
-        if (!isPositionEmpty(hx, hy+1)) {
-            x = getEntityAt(hx, hy+1);
-            if (x instanceof Enchantment) return x;
-        }
-        if (!isPositionEmpty(hx-1, hy)) {
-            x = getEntityAt(hx-1, hy);
-            if (x instanceof Enchantment) return x;
-        }
-        if (!isPositionEmpty(hx, hy-1)) {
-            x = getEntityAt(hx, hy-1);
-            if (x instanceof Enchantment) return x;
-        }
+    // used for checking the tiles hero is trying to walk to
+    public boolean checkCollision(Entity entity, int x, int y) {
+        if (grid[x][y] == null) return false;
+        return grid[x][y].getCollisionArea().intersects(entity.getCollisionArea());
+    }
 
+    // used for getting the prop the hero is looking at
+    public Prop getProp(int[] coordinates) {
+        if (grid[coordinates[0]][coordinates[1]] == null) return null;
+        if (grid[coordinates[0]][coordinates[1]].isProp()) return (Prop) grid[coordinates[0]][coordinates[1]];
         return null;
     }
 
+    // used for getting the enchantment the hero is looking at
+    public Enchantment getEnchantment(int[] coordinates) {
+        if (grid[coordinates[0]][coordinates[1]] == null) return null;
+        if (grid[coordinates[0]][coordinates[1]].isEnchantment()) return (Enchantment) grid[coordinates[0]][coordinates[1]];
+        return null;
+    }
 
-    public void openObject(Entity e) {
-        if (e instanceof GameObject){
-            Entity x = ((GameObject) e).getX();
-            removeEntity(e);
-            if (x != null){
-                x.place(e.getXPosition(), e.getYPosition());
-                addEntity(x, e.getXPosition(), e.getYPosition());
+    // used for spawning the rune in a random prop
+    public Prop getRandomProp() {
+        int randomIndex = RNG.nextInt(props.size());
+        int currentIndex = 0;
+        for (Prop prop : props) {
+            if (currentIndex == randomIndex) return prop;
+            currentIndex++;
+        }
+        return null;
+    }
+
+    public void changeRunePos() {
+        if (props.size() >= 2) {
+            Prop p = null;
+            do {
+                p = getRandomProp();
+            } while (p == runeHolder);
+            runeHolder = p;
+        }
+        System.out.println(runeHolder.getXPosition() + " " + runeHolder.getYPosition());
+    }
+
+    public void placeLuringGem(int x, int y) {
+        LuringGem l = new LuringGem();
+        l.setPickable(false);
+        l.place(x, y, this);
+
+        for (Character f : characters) {
+            if (f instanceof Fighter) {
+                ((Fighter) f).followLuringGem();
             }
         }
     }
 
     public void revealRune() {
         lastRevealRuneTime = System.currentTimeMillis();
-        revealRuneX = rune.getXPosition() - 3 + random.nextInt(4);
-        revealRuneY = rune.getYPosition() - 3 + random.nextInt(4);
+        do {
+            revealRuneX = runeHolder.getXPosition() - 3 + RNG.nextInt(4);
+            revealRuneY = runeHolder.getYPosition() - 3 + RNG.nextInt(4);
+        } while (!(revealRuneX > 0 && revealRuneX + 4 < tiles && revealRuneY > 0 && revealRuneY + 4 < tiles));
+        System.out.println(revealRuneX + " " + revealRuneY);
         revealRuneactive = true;
     }
 
@@ -223,129 +255,5 @@ public class Hall {
 
     public int getRevealRuneY() {
         return revealRuneY;
-    }
-
-    public void placeLuringGem(int x, int y, int direction) {
-        LuringGem luringGem = new LuringGem();
-        luringGem.place(x, y, this);
-
-        // Fighter Monster'lara gem'in yerini bildir
-        for (Monster monster : monsters) {
-            if (monster instanceof Fighter) {
-                ((Fighter) monster).followLuringGem(x, y);
-            }
-        }
-
-        addEntity(luringGem, x, y);
-    }
-
-
-    public void changeRunePos() {
-        if (hero.getHealth() > 0 && !(getEntityAt(rune.getXPosition(), rune.getYPosition()) instanceof Rune)) {
-            GameObject newObj = null;
-            GameObject oldObj = (GameObject) getEntityAt(rune.getXPosition(), rune.getYPosition());
-            ArrayList<GameObject> olist = new ArrayList<>();
-            for (GameObject obj : objects){
-                if (obj.caryRune() && obj != oldObj) {
-                    olist.add(obj);
-                }
-            }
-            if (olist.size() > 0 && oldObj != null) {
-                newObj = olist.get(random.nextInt(olist.size()));
-                oldObj.setX(newObj.getX());
-                newObj.setX(rune);
-                rune.setPosition(newObj.getXPosition(), newObj.getYPosition());
-            }
-        }
-    }
-
-
-
-
-    public void placeRandomCrate() {
-        int x, y;
-        int centerX = tiles / 2; // Haritanın merkez noktası (X)
-        int centerY = tiles / 2; // Haritanın merkez noktası (Y)
-        int radius = 4; // Crate'lerin merkez çevresindeki alanı
-
-        do {
-            x = centerX - radius + random.nextInt(2 * radius + 1);
-            y = centerY - radius + random.nextInt(2 * radius + 1);
-        } while (!isPositionEmpty(x, y)); // Pozisyon doluysa yeniden seç
-
-        Crate crate = new Crate();
-        crate.place(x, y); // Crate'i belirlenen pozisyona yerleştir
-
-        if (!rune.isPositionSet()) {
-            rune.setPosition(crate.getXPosition(), crate.getYPosition());
-            crate.setX(rune);
-        }
-        else {
-            int a = random.nextInt(5);
-            if (a == 0) crate.setX(new RevealRune());
-            else if (a == 1) crate.setX(new CloakOfProtection());
-            else if (a == 2) crate.setX(new LuringGem());
-            else if (a == 3) crate.setX(new ExtraTime());
-            else crate.setX(null);
-        }
-        
-        addEntity(crate, x, y);
-
-        System.out.println("Crate added at: (" + x + ", " + y + ")"); // Debugging için koordinat yazdır
-    }
-
-    public void placeRandomHeartChest() {
-        int x, y;
-        int centerX = tiles / 2; // Haritanın merkez noktası (X)
-        int centerY = tiles / 2; // Haritanın merkez noktası (Y)
-        int radius = 4; // Crate'lerin merkez çevresindeki alanı
-
-        do {
-            x = centerX - radius + random.nextInt(2 * radius + 1);
-            y = centerY - radius + random.nextInt(2 * radius + 1);
-        } while (!isPositionEmpty(x, y)); // Pozisyon doluysa yeniden seç
-        
-        HeartChest h = new HeartChest();
-        h.place(x, y);
-
-        h.setX(new ExtraLife());
-        addEntity(h, x, y);
-        System.out.println("HeartChest added at: (" + x + ", " + y + ")"); // Debugging için koordinat yazdır
-    }
-
-    public void placeRandomArcher() {
-        Archer archer = new Archer();
-        int x, y;
-        do {
-            x = (int) (Math.random() * tiles);
-            y = (int) (Math.random() * tiles);
-        } while (!isPositionEmpty(x, y));
-
-        archer.place(x, y, this);
-        addEntity(archer, x, y);
-    }
-
-    public void placeRandomFighter() {
-        Fighter fighter = new Fighter();
-        int x, y;
-        do {
-            x = random.nextInt(tiles);
-            y = random.nextInt(tiles);
-        } while (!isPositionEmpty(x, y));
-
-        fighter.place(x, y, this);
-        addEntity(fighter, x, y);
-    }
-
-    public void placeRandomWizard() {
-        Wizard wizard = new Wizard();
-        int x, y;
-        do {
-            x = (int) (Math.random() * tiles);
-            y = (int) (Math.random() * tiles);
-        } while (!isPositionEmpty(x, y));
-
-        wizard.place(x, y, this);
-        addEntity(wizard, x, y);
     }
 }

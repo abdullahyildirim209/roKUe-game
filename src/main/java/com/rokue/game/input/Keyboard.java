@@ -4,49 +4,70 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
+
     public boolean up, down, left, right;
-    public boolean b, a, d, w, s, p, q, r, z;
+    public boolean use, useLock;
+    public boolean r, p, b, w, a, s, d;
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        // Unused but required
-    }
+    public void keyTyped(KeyEvent e) {} // unused but required due to implemented interface
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> up = true;
-            case KeyEvent.VK_DOWN -> down = true;
-            case KeyEvent.VK_LEFT -> left = true;
-            case KeyEvent.VK_RIGHT -> right = true;
-            case KeyEvent.VK_B -> b = true;
-            case KeyEvent.VK_A -> a = true;
-            case KeyEvent.VK_D -> d = true;
-            case KeyEvent.VK_W -> w = true;
-            case KeyEvent.VK_S -> s = true;
-            case KeyEvent.VK_P -> p = true;
-            case KeyEvent.VK_Q -> q = true;
-            case KeyEvent.VK_R -> r = true;
-            case KeyEvent.VK_Z -> z = true;
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_UP) {
+            up = true;
         }
+        if (code == KeyEvent.VK_DOWN) {
+            down = true;
+        }
+        if (code == KeyEvent.VK_LEFT) {
+            left = true;
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            right = true;
+        }
+        if (code == KeyEvent.VK_C) {
+            if (!useLock) {
+                use = true;
+                useLock = true;
+            }
+        }
+        if (code == KeyEvent.VK_R) r = true;
+        if (code == KeyEvent.VK_P) p = true;
+        if (code == KeyEvent.VK_B) b = true;
+        if (code == KeyEvent.VK_W) w = true;
+        if (code == KeyEvent.VK_A) a = true;
+        if (code == KeyEvent.VK_S) s = true;
+        if (code == KeyEvent.VK_D) d = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> up = false;
-            case KeyEvent.VK_DOWN -> down = false;
-            case KeyEvent.VK_LEFT -> left = false;
-            case KeyEvent.VK_RIGHT -> right = false;
-            case KeyEvent.VK_B -> b = false;
-            case KeyEvent.VK_A -> a = false;
-            case KeyEvent.VK_D -> d = false;
-            case KeyEvent.VK_W -> w = false;
-            case KeyEvent.VK_S -> s = false;
-            case KeyEvent.VK_P -> p = false;
-            case KeyEvent.VK_Q -> q = false;
-            case KeyEvent.VK_R -> r = false;
-            case KeyEvent.VK_Z -> z = false;
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_UP) {
+            up = false;
         }
+        if (code == KeyEvent.VK_DOWN) {
+            down = false;
+        }
+        if (code == KeyEvent.VK_LEFT) {
+            left = false;
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            right = false;
+        }
+        if (code == KeyEvent.VK_C) {
+            useLock = false;
+        }
+        if (code == KeyEvent.VK_R) r = false;
+        if (code == KeyEvent.VK_P) p = false;
+        if (code == KeyEvent.VK_B) b = false;
+        if (code == KeyEvent.VK_W) w = false;
+        if (code == KeyEvent.VK_A) a = false;
+        if (code == KeyEvent.VK_S) s = false;
+        if (code == KeyEvent.VK_D) d = false;
     }
 }
