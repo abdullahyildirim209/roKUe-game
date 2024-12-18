@@ -14,7 +14,7 @@ public class Fighter extends Character{
     private int targetX = -1;
     private int targetY = -1;
     private boolean moved = false;
-    private final long randomMoveTime = 300;
+    private final long randomMoveTime = 500;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
 

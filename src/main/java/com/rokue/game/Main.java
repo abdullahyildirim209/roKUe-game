@@ -44,6 +44,7 @@ public class Main {
         new Archer().randomlyPlace(halls[1]);
         new Wizard().randomlyPlace(halls[1]);
         new Fighter().randomlyPlace(halls[1]);
+        new Fighter().randomlyPlace(halls[1]);
 
         new Prop(4).place(2, 15, halls[2]);
         new Prop(4).place(3, 15, halls[2]);
