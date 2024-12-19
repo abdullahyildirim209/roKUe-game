@@ -69,6 +69,12 @@ public class PlayPanel extends JPanel implements Runnable {
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
+            while (keyboard.pause) {
+                currentTime = System.nanoTime();
+                lastTime = currentTime;
+                System.out.print("");
+            }
+
             if (delta >= 1) {
                 update();
                 repaint();

@@ -8,6 +8,7 @@ public class Keyboard implements KeyListener {
     public boolean up, down, left, right;
     public boolean use, useLock;
     public boolean r, p, b, w, a, s, d;
+    public boolean pause, pauseLock;
 
     @Override
     public void keyTyped(KeyEvent e) {} // unused but required due to implemented interface
@@ -41,6 +42,13 @@ public class Keyboard implements KeyListener {
         if (code == KeyEvent.VK_A) a = true;
         if (code == KeyEvent.VK_S) s = true;
         if (code == KeyEvent.VK_D) d = true;
+
+        if (code == KeyEvent.VK_ESCAPE) {
+            if (!pauseLock) {
+                pause = !pause;
+                pauseLock = true;
+            }
+        }
     }
 
     @Override
@@ -69,5 +77,9 @@ public class Keyboard implements KeyListener {
         if (code == KeyEvent.VK_A) a = false;
         if (code == KeyEvent.VK_S) s = false;
         if (code == KeyEvent.VK_D) d = false;
+
+        if (code == KeyEvent.VK_ESCAPE) {
+            pauseLock = false;
+        }
     }
 }
