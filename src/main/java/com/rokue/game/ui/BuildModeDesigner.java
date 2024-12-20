@@ -195,8 +195,8 @@ rightPanel.add(finishButton, gbc);
         rightPanel.add(crateButton, gbc);
 
         // Dynamic Object Buttons
-        String[] imgNames = {"blue_flag", "green_flag", "yellow_flag", "red_flag", "earth_decorate",
-                "fire_decorate", "water_decorate", "head", "ladder", "pillar"};
+        String[] imgNames = {"earth_decorate", "fire_decorate", "water_decorate", "head", "ladder", "pillar"};
+
 
         for (String imgName : imgNames) {
             gbc.gridy++;

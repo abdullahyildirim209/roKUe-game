@@ -53,27 +53,46 @@ public class MouseInputHandler extends MouseAdapter {
             // Ensure the local coordinates are valid
             if (localTileX >= 0 && localTileX < Hall.getTiles() && localTileY >= 0 && localTileY < Hall.getTiles()) {
                 if ("Place".equals(buildModeDesigner.getSelectedAction())) {
-                    // Overwrite existing object with the new one
-                    if ("Crate".equals(selectedObject)) {
-                        new Prop(4).place(localTileX, localTileY, clickedHall); // Place a crate
+                    // Check if the tile is empty before placing
+                    if (clickedHall.getGrid()[localTileX][localTileY] == null) {
+                        if ("Crate".equals(selectedObject)) {
+                            new Prop(4).place(localTileX, localTileY, clickedHall); // Place a crate
+                        } else {
+                            new OtherObjects("sprites/objects/" + selectedObject + ".png")
+                                .place(localTileX, localTileY, clickedHall); // Place another object
+                        }
+                        System.out.println("Placed object: " + selectedObject + " at (" + localTileX + ", " + localTileY + ")");
                     } else {
-                        new OtherObjects("sprites/objects/" + selectedObject + ".png")
-                            .place(localTileX, localTileY, clickedHall); // Place another object
+                        System.out.println("Tile already occupied at: (" + localTileX + ", " + localTileY + ")");
                     }
-                    System.out.println("Placed object: " + selectedObject + " at (" + localTileX + ", " + localTileY + ")");
                     gridPanel.revalidate();
                     gridPanel.repaint();
     
                 } else if ("Remove".equals(buildModeDesigner.getSelectedAction())) {
-                    // Always set the grid cell to null
-                    System.out.println("Removing object at: (" + localTileX + ", " + localTileY + ")");
-                    clickedHall.getGrid()[localTileX][localTileY] = null; // Clear the grid cell
-                    gridPanel.revalidate();
-                    gridPanel.repaint();
+                    // Check if there is an object to remove
+                    if (clickedHall.getGrid()[localTileX][localTileY] != null) {
+                        System.out.println("Removing object at: (" + localTileX + ", " + localTileY + ")");
+                        clickedHall.getGrid()[localTileX][localTileY] = null; // Clear the grid cell
+    
+                        // Remove corresponding prop if any
+                        clickedHall.getProps().removeIf(
+                            prop -> prop.getXPosition() == localTileX && prop.getYPosition() == localTileY
+                        );
+    
+                        gridPanel.revalidate();
+                        gridPanel.repaint();
+                    } else {
+                        System.out.println("No object to remove at: (" + localTileX + ", " + localTileY + ")");
+                    }
                 }
+            } else {
+                System.out.println("Clicked outside valid grid area.");
             }
+        } else {
+            System.out.println("Clicked outside hall boundaries.");
         }
     }
+    
     
 
     
