@@ -3,12 +3,8 @@ package com.rokue.game;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import com.rokue.game.entities.Archer;
-import com.rokue.game.entities.Fighter;
-import com.rokue.game.entities.Prop;
-import com.rokue.game.entities.Wizard;
 import com.rokue.game.map.Hall;
-import com.rokue.game.ui.PlayPanel;
+import com.rokue.game.ui.BuildModeDesigner;
 import com.rokue.game.ui.SpriteLoader;
 import com.rokue.game.utils.RNG;
 
@@ -16,6 +12,27 @@ import com.rokue.game.utils.RNG;
 public class Main {
     public static void main(String[] args) {
 
+        // Create the window
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("RoKUe");
+        window.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
+
+        // Initialize halls and build mode
+        Hall[][] halls = {
+            {new Hall(new RNG()), new Hall(new RNG())},
+            {new Hall(new RNG()), new Hall(new RNG())}
+        };
+
+        // Show BuildModeDesigner first
+        BuildModeDesigner buildModeDesigner = new BuildModeDesigner(halls);
+        window.add(buildModeDesigner);
+
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+        /*
         // create the window
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,5 +84,6 @@ public class Main {
         window.setVisible(true);
 
         playPanel.startGameThread(); // start game loop
+    */
     }
 }

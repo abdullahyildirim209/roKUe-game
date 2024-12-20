@@ -24,15 +24,20 @@ public class Prop extends Entity {
         }
     }
 
-    @Override
     public void place(int xPosition, int yPosition, Hall hall) {
-        super.place(xPosition, yPosition, hall);
-        if (ID < 4) {
-            hall.getNonRuneProps().add(this);
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.hall = hall;
+    
+        // Ensure the entity is added to the Hall grid
+        if (hall.getGrid()[xPosition][yPosition] == null) {
+            hall.getGrid()[xPosition][yPosition] = this;
+            System.out.println("Entity placed at grid[" + xPosition + "][" + yPosition + "]"+" hall "+ hall);
         } else {
-            hall.getProps().add(this);
+            System.out.println("Grid cell already occupied at [" + xPosition + "][" + yPosition + "]");
         }
     }
+    
 
     @Override
     public void update() {}

@@ -1,7 +1,10 @@
 package com.rokue.game.map;
 
 import java.util.HashSet;
-import com.rokue.game.utils.RNG;
+
+import com.rokue.game.entities.Character;
+import com.rokue.game.entities.CloakOfProtection;
+import com.rokue.game.entities.Enchantment;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.ExtraTime;
 import com.rokue.game.entities.Fighter;
@@ -9,14 +12,12 @@ import com.rokue.game.entities.Hero;
 import com.rokue.game.entities.LuringGem;
 import com.rokue.game.entities.Prop;
 import com.rokue.game.entities.RevealRune;
-import com.rokue.game.entities.Character;
-import com.rokue.game.entities.CloakOfProtection;
-import com.rokue.game.entities.Enchantment;
+import com.rokue.game.utils.RNG;
 
 
 public class Hall {
-    static final int tiles = 18; // effectively 16x16 grid (outer part is filled with invisible props to act as walls)
-    static final int pixelsPerTile = 16; // 16x16 pixel squares
+    public static final int tiles = 18; // effectively 16x16 grid (outer part is filled with invisible props to act as walls)
+    public static final int pixelsPerTile = 16; // 16x16 pixel squares
 
     boolean heroExit = false; // true when hero leaves through the door, playMode switches to the next hall when true
     boolean doorOpen = false;
@@ -295,5 +296,19 @@ public class Hall {
 
     public int getRevealRuneY() {
         return revealRuneY;
+    }
+
+    public int getObjectCount() {
+        int count = 0;
+        for (int x = 1; x < tiles-1; x++) {
+            for (int y = 1; y < tiles-1; y++) {
+                if (grid[x][y] != null) count++;
+            }
+        }
+        return count;
+    }
+    
+    public boolean meetsObjectCriteria(int requiredObjects) {
+        return getObjectCount() >= requiredObjects;
     }
 }
