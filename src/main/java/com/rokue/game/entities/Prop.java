@@ -21,8 +21,12 @@ public class Prop extends Entity {
         this.ID = ID;
         this.selected = 0;
         collisionY = 16;
-        if (ID < 2) {
+        if (ID < 2 || ID == 13) { // or ladder
             shadow = false;
+        }
+        if (ID == 12) { // head
+            collisionX = 2;
+            collisionWidth = 12;
         }
     }
 
@@ -86,12 +90,14 @@ public class Prop extends Entity {
     @Override
     public int getShadowX() {
         if (hall.isDoorOpen() && hall.runeHolder == this) return getXPixelPosition() + 3;
+        if (ID == 12) return getXPixelPosition() + 3; //head
         return getXPixelPosition() + 0;
     }
 
     @Override
     public int getShadowY() {
         if (hall.isDoorOpen() && hall.runeHolder == this) return getYPixelPosition() + 26;
+        if (ID == 12) return getYPixelPosition() + 28; //head
         return getYPixelPosition() + 32;
     }
 
@@ -99,12 +105,15 @@ public class Prop extends Entity {
     public int getShadowHeight() {
         if (hall.isDoorOpen() && hall.runeHolder == this) return 8;
         if (ID == 3) return 15; 
+        if (ID == 12) return 10; //head
+        if (ID == 14) return 24; //pillar
         return 11;
     }
 
     @Override
     public int getShadowWidth() {
         if (hall.isDoorOpen() && hall.runeHolder == this) return 11;
+        if (ID == 12) return 10; //head
         return 16;
     }
 
