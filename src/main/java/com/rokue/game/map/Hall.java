@@ -9,6 +9,8 @@ import com.rokue.game.entities.Hero;
 import com.rokue.game.entities.LuringGem;
 import com.rokue.game.entities.Prop;
 import com.rokue.game.entities.RevealRune;
+import com.rokue.game.entities.Wizard;
+import com.rokue.game.entities.Archer;
 import com.rokue.game.entities.Character;
 import com.rokue.game.entities.CloakOfProtection;
 import com.rokue.game.entities.Enchantment;
@@ -35,6 +37,7 @@ public class Hall {
     long lastEnchantmentTime = 0;
     Enchantment lastEnchantment = null;
     LuringGem activeLuringGem = null;
+    long lastMonsterSpawn = 0;
     RNG RNG;
     
     public Hall(RNG RNG) {
@@ -99,6 +102,7 @@ public class Hall {
     public void setHero(Hero h) {
         hero = h;
         lastEnchantmentTime = System.currentTimeMillis();
+        lastMonsterSpawn = System.currentTimeMillis();
     }
 
     public HashSet<Prop> getProps() {
@@ -183,7 +187,17 @@ public class Hall {
             }
         }
 
-
+        // Monster Spwaning
+        if (System.currentTimeMillis() - lastMonsterSpawn > 8000) {
+            lastMonsterSpawn = System.currentTimeMillis();
+            int a = RNG.nextInt(3);
+            Character c = null;
+            if (a == 0) c = new Fighter();
+            else if (a == 1) c = new Archer();
+            else c = new Wizard();
+            
+            c.randomlyPlace(this);
+        }
     }
 
 
