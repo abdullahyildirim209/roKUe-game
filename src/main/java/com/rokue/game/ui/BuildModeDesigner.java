@@ -13,7 +13,7 @@ import javax.swing.*;
 public class BuildModeDesigner extends JPanel {
     private Hall[][] halls; // 2x2 grid of halls
     private String selectedAction = "Place"; // Default action
-    private String selectedObject = "Crate"; // Default object
+    private int objectID = 4; // Default object = Crate
     private final int scale = 1; // Adjusted scale
     private final int scaledTileSize = Hall.getPixelsPerTile() * scale;
     private final int hallSpacing = 50; // Spacing between grids
@@ -22,6 +22,9 @@ public class BuildModeDesigner extends JPanel {
     String[][] hallLabels = {{"HallWater", "HallEarth"}, {"HallFire", "HallAir"}};
     private int offset=2;
     private JPanel gridPanel;
+    private boolean buildFinished = false;
+    private SpriteLoader spriteHandler = new SpriteLoader();
+    
     public BuildModeDesigner(Hall[][] halls) {
     	
         this.halls = halls;
@@ -106,22 +109,13 @@ public class BuildModeDesigner extends JPanel {
         objectLabel.setForeground(Color.WHITE);
         rightPanel.add(objectLabel, gbc);
         
-        gbc.gridy++;
-        ImageIcon crateIcon = new ImageIcon(Hero.class.getResource("/sprites/build/Crate.png"));
-        JButton crateButton = new JButton(crateIcon);
-        crateButton.addActionListener(e -> selectedObject = "Crate");
-        crateButton.setContentAreaFilled(false);
-        crateButton.setBorderPainted(false);
-        rightPanel.add(crateButton, gbc);
+        int[] objectIDs = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
         
-        String[] imgNames = {"blue_flag", "green_flag", "yellow_flag", "red_flag", "earth_decorate",
-        		"fire_decorate", "water_decorate", "head", "ladder", "pillar"};
-        
-        for (String imgName: imgNames) {
+        for (Integer oID: objectIDs) {
         	gbc.gridy++;
-            ImageIcon objectIcon = new ImageIcon(Hero.class.getResource("/sprites/build/"+imgName+".png"));
+            ImageIcon objectIcon = new ImageIcon(Hero.class.getResource("/sprites/prop/"+(oID*2)+".png"));
             JButton objectButton = new JButton(objectIcon);
-            objectButton.addActionListener(e -> selectedObject = imgName);
+            objectButton.addActionListener(e -> objectID = oID);
             objectButton.setOpaque(false);
             objectButton.setContentAreaFilled(false);
             objectButton.setBorderPainted(false);
@@ -201,7 +195,7 @@ public class BuildModeDesigner extends JPanel {
                 // Draw entities in the current hall
                 Hall hall = halls[row][col];
                 for (Prop prop : hall.getProps()) {
-                    g2.drawImage(prop.getSprite(new SpriteLoader()),
+                    g2.drawImage(prop.getSprite(spriteHandler),
                             prop.getXPixelPosition() * scale + xOffset,
                             (prop.getYPixelPosition() - Hall.getPixelsPerTile()) * scale + yOffset,
                             scaledTileSize, scaledTileSize, null);
@@ -284,7 +278,7 @@ public class BuildModeDesigner extends JPanel {
             // Ensure localX and localY are within bounds of the hall grid
             if (localX > 0 && localX < Hall.getTiles() - 1 && localY > 0 + 2 && localY < Hall.getTiles() - 1 + 1) {
                 if ("Place".equals(selectedAction)) {
-                	new Prop(4).place(localX, localY, hall);
+                	new Prop(objectID).place(localX, localY, hall);
                 	/*if ("Crate".equals(selectedObject)) {
                         new Prop(4).place(localX, localY, hall);
                     } else {
@@ -342,10 +336,20 @@ public class BuildModeDesigner extends JPanel {
         if (valid) {
             JOptionPane.showMessageDialog(this, "Build mode completed successfully!",
                     "Success", JOptionPane.INFORMATION_MESSAGE);
+            buildFinished=true;
+            
         } else {
             JOptionPane.showMessageDialog(this, errorMessages.toString(),
                     "Build Mode Incomplete", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public boolean getBuildFinished() {
+    	return buildFinished;
+    }
+    
+    public Hall[][] getHalls(){
+    	return halls;
     }
      
 }

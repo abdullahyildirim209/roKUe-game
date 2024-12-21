@@ -13,7 +13,7 @@ public class SpriteLoader {
 
     // 0 = door left, 2 = door right, 4 = healtChest,               6 = openHealtChest,               8 = crate (not open / highlighted)
     // 1 = door left, 3 = door right, 5 = healtChest (highlighted), 7 = openHealtChest (highlighted), 9 = crate (open / highlighted)
-    Image[] propSprites = new Image[10];
+    Image[] propSprites = new Image[30];
 
     // 0 = water, 1 = earth, 2 = fire, 3 = air
     Image[] runeSprites = new Image[4];
@@ -30,7 +30,7 @@ public class SpriteLoader {
 
     public SpriteLoader() {
         loadSprites(9, "hero", heroSprites);
-        loadSprites(9, "prop", propSprites);
+        loadSprites(29, "prop", propSprites);
         loadSprites(1, "hall", hallSprites);
         loadSprites(3, "rune", runeSprites);
         loadSprites(4, "monster", monsterSprites);

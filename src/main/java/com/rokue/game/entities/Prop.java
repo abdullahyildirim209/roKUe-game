@@ -9,6 +9,8 @@ public class Prop extends Entity {
     Image sprite;
 
     // -1 = invisible, 0 = doorLeft, 1 = doorRight, 2 = heartChest, 3 = openHeartChest, 4 = crate
+    //5=blueFlag, 6=greenFlag, 7=yellowFlag, 8=redFlag, 9=earthDecorate, 10=fireDecorate, 
+    //11=waterDecorate, 12=head, 13=ladder, 14=pillar 
     int ID;
 
     // 0 = not selected, 1 = selected
