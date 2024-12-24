@@ -3,10 +3,11 @@ package com.rokue.game.entities;
 import java.awt.Image;
 
 import com.rokue.game.map.Hall;
+import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
 public class Archer extends Character {
-    private final long attackInterval = 1000;
+    private final long attackInterval = 60;
     private long lastAttackTime = 0;
     private boolean sideOfHero = false;
 
@@ -25,7 +26,7 @@ public class Archer extends Character {
         if (xPosition >= hall.getHero().xPosition) sideOfHero = false;
         else sideOfHero = true;
 
-        long currentTime = System.currentTimeMillis();
+        long currentTime = PlayPanel.tickTime;
 
         if (!hall.isHeroExit()) {
             int heroX = hall.getHero().getXPosition();

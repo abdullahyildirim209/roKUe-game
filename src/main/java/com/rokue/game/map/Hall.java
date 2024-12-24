@@ -10,6 +10,7 @@ import com.rokue.game.entities.LuringGem;
 import com.rokue.game.entities.Prop;
 import com.rokue.game.entities.RevealRune;
 import com.rokue.game.entities.Wizard;
+import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.entities.Archer;
 import com.rokue.game.entities.Character;
 import com.rokue.game.entities.CloakOfProtection;
@@ -101,8 +102,8 @@ public class Hall {
 
     public void setHero(Hero h) {
         hero = h;
-        lastEnchantmentTime = System.currentTimeMillis();
-        lastMonsterSpawn = System.currentTimeMillis();
+        lastEnchantmentTime = PlayPanel.tickTime;
+        lastMonsterSpawn = PlayPanel.tickTime;
     }
 
     public HashSet<Prop> getProps() {
@@ -123,13 +124,13 @@ public class Hall {
 
     public void update() {
         // RevealRune deactivate
-        if (System.currentTimeMillis() - lastRevealRuneTime > 10000) {
+        if (PlayPanel.tickTime - lastRevealRuneTime > 10*60) {
             deactivateRevealRune();
         }
 
         // Random enchantment spawn
-        if (System.currentTimeMillis() - lastEnchantmentTime > 12000) {
-            lastEnchantmentTime = System.currentTimeMillis();
+        if (PlayPanel.tickTime - lastEnchantmentTime > 12*60) {
+            lastEnchantmentTime = PlayPanel.tickTime;
             int x = RNG.nextInt(4);
             Enchantment e = null;
             int[] pos = getRandomEmptyTilePosition();
@@ -154,7 +155,7 @@ public class Hall {
         }
 
         // Enchantment delete if not picked
-        if (System.currentTimeMillis() - lastEnchantmentTime > 6000 && lastEnchantment != null) {
+        if (PlayPanel.tickTime - lastEnchantmentTime > 6*60 && lastEnchantment != null) {
             enchantments.remove(lastEnchantment); 
             grid[lastEnchantment.getXPosition()][lastEnchantment.getYPosition()] = null;
             lastEnchantment = null;
@@ -188,8 +189,8 @@ public class Hall {
         }
 
         // Monster Spwaning
-        if (System.currentTimeMillis() - lastMonsterSpawn > 8000) {
-            lastMonsterSpawn = System.currentTimeMillis();
+        if (PlayPanel.tickTime - lastMonsterSpawn > 8*60) {
+            lastMonsterSpawn = PlayPanel.tickTime;
             int a = RNG.nextInt(3);
             Character c = null;
             if (a == 0) c = new Fighter();
@@ -286,7 +287,7 @@ public class Hall {
     }
 
     public void revealRune() {
-        lastRevealRuneTime = System.currentTimeMillis();
+        lastRevealRuneTime = PlayPanel.tickTime;
         do {
             revealRuneX = runeHolder.getXPosition() - 3 + RNG.nextInt(4);
             revealRuneY = runeHolder.getYPosition() - 3 + RNG.nextInt(4);

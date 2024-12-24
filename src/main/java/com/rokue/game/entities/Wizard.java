@@ -3,10 +3,11 @@ package com.rokue.game.entities;
 import java.awt.Image;
 
 import com.rokue.game.map.Hall;
+import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
 public class Wizard extends Character {
-    private final long changeInterval = 5000;
+    private final long changeInterval = 5 * 60;
     private long lastChangeTime = 0;
 
     public Wizard() {
@@ -22,7 +23,7 @@ public class Wizard extends Character {
 
     @Override
     public void update() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = PlayPanel.tickTime;
 
         if (!hall.isHeroExit() && !hall.isDoorOpen()){
             if (currentTime - lastChangeTime > changeInterval) {
