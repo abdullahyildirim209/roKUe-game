@@ -34,7 +34,10 @@ public class PlayPanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
+    public static int tickTime = 0;
+
     public PlayPanel(Hall[] halls, SpriteLoader spriteLoader) {
+        PlayPanel.tickTime = 0;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
         hero.randomlyPlace(halls[currentHallNo]);
@@ -76,6 +79,7 @@ public class PlayPanel extends JPanel implements Runnable {
             }
 
             if (delta >= 1) {
+                PlayPanel.tickTime++;
                 update();
                 repaint();
                 delta--;
@@ -143,7 +147,7 @@ public class PlayPanel extends JPanel implements Runnable {
         g2.drawString("Health: " + halls[currentHallNo].getHero().getHealth(), screenWidth - 100, 30);
 
         if (hero.isCloakActive()) {
-            long remainingTime = (hero.getCloakDuration() - (System.currentTimeMillis() - hero.getCloakStartTime())) / 1000;
+            long remainingTime = (hero.getCloakDuration() - (PlayPanel.tickTime - hero.getCloakStartTime())) / 60;
             g2.setColor(Color.CYAN);
             g2.drawString("Cloak Time: " + remainingTime + "s", screenWidth / 2 - 73, 30);
         }

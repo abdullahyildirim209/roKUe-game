@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
+import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
 public class Hero extends Character {
@@ -19,7 +20,7 @@ public class Hero extends Character {
     int[] inventory = {10, 2, 5};
     boolean cloakActive = false;
     private long cloakStartTime = 0; // When the cloak was activated
-    private final long cloakDuration = 20000; // Cloak duration (20 seconds in ms)
+    private final long cloakDuration = 20 * 60; // Cloak duration (20 seconds)
 
     Prop selectedProp;
     Enchantment selectedEnchantment;
@@ -117,14 +118,14 @@ public class Hero extends Character {
     // Activate cloak on pressing 'P'
     public void activateCloak() {
         if (keyboard.p && !cloakActive && removeFromInventory(new CloakOfProtection())) {
-            cloakStartTime = System.currentTimeMillis();
+            cloakStartTime = PlayPanel.tickTime;
             cloakActive = true;
             keyboard.p = false;
         }
     }
 
     public void deactivateCloak() {
-        if (cloakActive && System.currentTimeMillis() - cloakStartTime > cloakDuration) {
+        if (cloakActive && PlayPanel.tickTime - cloakStartTime > cloakDuration) {
             cloakActive = false;
         }
     }

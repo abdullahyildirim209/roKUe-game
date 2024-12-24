@@ -3,18 +3,19 @@ package com.rokue.game.entities;
 import java.awt.Image;
 
 import com.rokue.game.map.Hall;
+import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
 public class Fighter extends Character{
     
     private boolean sideOfHero = false;
     private boolean followLuringGem = false;
-    private final long attackDelay = 500;
+    private final long attackDelay = 30;
     private long lastAttack = 0;
     private int targetX = -1;
     private int targetY = -1;
     private boolean moved = false;
-    private final long randomMoveTime = 500;
+    private final long randomMoveTime = 30;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
 
@@ -50,9 +51,9 @@ public class Fighter extends Character{
             int dy = Math.abs(heroY - yPosition);
 
             // If distance to Hero is 1, attack
-            if (dx + dy == 1 && System.currentTimeMillis() - lastAttack > attackDelay) {
+            if (dx + dy == 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
                 hall.getHero().decreaseHealth();
-                lastAttack = System.currentTimeMillis();
+                lastAttack = PlayPanel.tickTime;
                 System.out.println("Fighter hit the Hero! Hero's health: " + hall.getHero().getHealth());
             }
             // If the Hero is within 3 tiles, move towards the Hero
@@ -92,8 +93,8 @@ public class Fighter extends Character{
     }
 
     public void randomMove() {
-        if (System.currentTimeMillis() - lastRandomMove > randomMoveTime) {
-            lastRandomMove = System.currentTimeMillis();
+        if (PlayPanel.tickTime - lastRandomMove > randomMoveTime) {
+            lastRandomMove = PlayPanel.tickTime;
             randomMoveDirection = hall.getRNG().nextInt(4);
         }
 
