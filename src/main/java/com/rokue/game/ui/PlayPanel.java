@@ -179,7 +179,7 @@ public class PlayPanel extends JPanel implements Runnable {
         g2.drawString(halls[currentHallNo].getTime() + " s" , inventoryPanelX+15*scale, 55*scale);
         
         g2.setColor(new Color(211, 211, 211));
-        g2.drawString("Health:", inventoryPanelX+15*scale, 70*scale);
+        g2.drawString("Life:", inventoryPanelX+15*scale, 70*scale);
         int heartCount = halls[currentHallNo].getHero().getHealth();
         if (heartCount==0) {
         	g2.setColor(Color.RED);
