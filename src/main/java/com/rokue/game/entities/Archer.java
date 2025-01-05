@@ -2,6 +2,7 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
@@ -36,6 +37,7 @@ public class Archer extends Character {
             if (distance < 4 && currentTime - lastAttackTime > attackInterval && !hall.getHero().isCloakActive()) {
                 hall.getHero().decreaseHealth();
                 lastAttackTime = currentTime;
+                SoundManager.playSound("archer");
             }
         }
     }

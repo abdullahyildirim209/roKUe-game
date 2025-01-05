@@ -2,6 +2,7 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
@@ -29,6 +30,7 @@ public class Wizard extends Character {
             if (currentTime - lastChangeTime > changeInterval) {
                 hall.changeRunePos();
                 System.out.println("Wizard: Rune pos changed");
+                SoundManager.playSound("wizard");
                 lastChangeTime = currentTime;
             }
         }

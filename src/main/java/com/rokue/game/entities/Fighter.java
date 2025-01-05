@@ -2,6 +2,7 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
@@ -54,6 +55,7 @@ public class Fighter extends Character{
             if (dx + dy == 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
                 hall.getHero().decreaseHealth();
                 lastAttack = PlayPanel.tickTime;
+                SoundManager.playSound("fighterAttack");
                 System.out.println("Fighter hit the Hero! Hero's health: " + hall.getHero().getHealth());
             }
             // If the Hero is within 3 tiles, move towards the Hero

@@ -3,6 +3,7 @@ package com.rokue.game.entities;
 import java.awt.Image;
 import java.util.Arrays;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
@@ -63,6 +64,10 @@ public class Hero extends Character {
     public void decreaseHealth() {
         if (health > 0) {
             health--;
+        }
+        if (health == 0) {
+            System.out.println("Hero died!");
+            SoundManager.playSound("fail");
         }
     }
 
@@ -265,8 +270,11 @@ public class Hero extends Character {
                 if (selectedEnchantment instanceof ExtraTime) {
                     hall.setTime(hall.getTime() + 5);
                 }
-                else addToInventory(selectedEnchantment);
-        
+                else {
+                    addToInventory(selectedEnchantment);
+                }
+
+                SoundManager.playSound("itemCollected");
                 hall.getEnchantments().remove(selectedEnchantment);
                 hall.getGrid()[selectedEnchantment.getXPosition()][selectedEnchantment.getYPosition()] = null;
                 System.out.println(Arrays.toString(inventory));

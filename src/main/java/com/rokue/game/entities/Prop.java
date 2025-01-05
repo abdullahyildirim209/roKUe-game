@@ -2,6 +2,7 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.SpriteLoader;
 
@@ -84,6 +85,8 @@ public class Prop extends Entity {
             hall.getGrid()[xPosition][yPosition] = null;
         } else if (hall.runeHolder == this) {
             hall.setDoorOpen(true);
+
+            SoundManager.playSound("doorOpen");
         }
     }
 

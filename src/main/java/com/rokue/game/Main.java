@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.BuildModeDesigner;
 import com.rokue.game.ui.MainPanel;
@@ -104,6 +105,16 @@ public class Main {
      * actually open the "Play" window with a known set of halls and an existing spriteHandler.
      */
     private static void startPlayMode(Hall[] halls, SpriteLoader spriteHandler) {
+        SoundManager.loadSound("fighterAttack", "/sprites/wav/fighterHit.wav");
+        SoundManager.loadSound("doorOpen", "/sprites/wav/kapi acilma sesi.wav");
+        SoundManager.loadSound("wizard", "/sprites/wav/wizard.wav");
+        SoundManager.loadSound("archer", "/sprites/wav/okcunun sesi.wav");
+        SoundManager.loadSound("heroHit", "/sprites/wav/hasar alma sesi.wav");
+        SoundManager.loadSound("itemCollected", "/sprites/wav/collecting item.wav");
+        SoundManager.loadSound("fail", "/sprites/wav/fail-144746.wav");
+
+        System.out.println("All sounds loaded successfully.");
+
         JFrame playWindow = new JFrame();
         playWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         playWindow.setResizable(false);
