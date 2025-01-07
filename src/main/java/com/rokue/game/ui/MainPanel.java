@@ -1,18 +1,18 @@
 package com.rokue.game.ui;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import com.rokue.game.Main;  // <-- import your Main class here
+import com.rokue.game.Main;
 
 public class MainPanel extends JFrame {
 
@@ -21,96 +21,74 @@ public class MainPanel extends JFrame {
     public MainPanel() {
         setTitle("Main Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 351);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Make it fullscreen and resizable
 
+        // Set content pane with a custom background image
+        contentPane = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Load and draw background image
+                Image backgroundImage = new ImageIcon(SpriteLoader.class.getResource("/sprites/MainMenu.jpg")).getImage();
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        contentPane.setLayout(null); // Initial layout for dynamic resizing
         setContentPane(contentPane);
-        contentPane.setLayout(null);
 
-        // "Play Game" Button
-        JButton startGameButton = new JButton("Play Game");
-        startGameButton.setBounds(141, 100, 148, 47);
-        contentPane.add(startGameButton);
-        startGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();                       // Close the menu
-                Main.startPlayMode();           // Start immediate play
-            }
-        });
+        // Create buttons
+        JButton playGameButton = createTransparentButton("Play Game");
+        JButton buildModeButton = createTransparentButton("Build Mode");
+        JButton helpButton = createTransparentButton("Help");
 
-        // "Build Mode" Button
-        JButton buildModeButton = new JButton("Build Mode");
-        buildModeButton.setBounds(141, 157, 148, 47);
+        // Add buttons to content pane
+        contentPane.add(playGameButton);
         contentPane.add(buildModeButton);
-        buildModeButton.addActionListener(new ActionListener() {
+        contentPane.add(helpButton);
+
+        // Add a resize listener to adjust buttons dynamically
+        addComponentListener(new ComponentAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();                       // Close the menu
-                Main.startBuildMode();          // Start build mode
+            public void componentResized(ComponentEvent e) {
+                int width = getWidth();
+                int height = getHeight();
+
+                // Dynamically align buttons
+                playGameButton.setBounds(width * 175 / 1000, height * 68 / 100, width * 10 / 100, height * 10 / 100);
+                buildModeButton.setBounds(width * 47 / 100, height * 68 / 100, width * 10 / 100, height * 10 / 100);
+                helpButton.setBounds(width * 76 / 100, height * 68 / 100, width * 10 / 100, height * 10 / 100);
             }
         });
 
-        // "Help" Button
-        JButton helpMenuButton = new JButton("Help");
-        helpMenuButton.setBounds(140, 214, 149, 47);
-        contentPane.add(helpMenuButton);
-        helpMenuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Example help action
-                showHelpDialog();
-            }
+        // Set button actions
+        playGameButton.addActionListener(e -> {
+            dispose();
+            Main.startPlayMode();
         });
+        buildModeButton.addActionListener(e -> {
+            dispose();
+            Main.startBuildMode();
+        });
+        helpButton.addActionListener(e -> showHelpDialog());
+
+        // Trigger initial resize to position buttons
+        revalidate();
+        repaint();
     }
+
+    private JButton createTransparentButton(String text) {
+        JButton button = new JButton(text);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFont(new Font("Serif", Font.BOLD, 22));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        return button;
+    }
+
     private void showHelpDialog() {
-        // Create a modal dialog owned by this MainPanel
-        JDialog helpDialog = new JDialog(this, "Help & Instructions", true);
-        helpDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    
-        // We'll use a BorderLayout to position text area and a close button
-        JPanel dialogPanel = new JPanel(new BorderLayout(10, 10));
-        dialogPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-    
-        // Add a text area (within a scroll pane) for multi-line help text
-        JTextArea helpTextArea = new JTextArea();
-        helpTextArea.setEditable(false);
-        helpTextArea.setText(
-            "Welcome to RoKUe!\n\n" +
-            "Instructions:\n" +
-            "1. Click 'Play Game' to start playing with a default map.\n" +
-            "2. Click 'Build Mode' to design or customize your own halls.\n" +
-            "3. In Build Mode, you can place, remove, or reset props, then press 'Finish' to play.\n\n" +
-            "Have fun!"
-        );
-        JScrollPane scrollPane = new JScrollPane(helpTextArea);
-        dialogPanel.add(scrollPane, BorderLayout.CENTER);
-    
-        // Create a small panel at the bottom for a 'Close' button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(e -> helpDialog.dispose());
-        buttonPanel.add(closeButton);
-        dialogPanel.add(buttonPanel, BorderLayout.SOUTH);
-    
-        // Add the panel to the dialog
-        helpDialog.setContentPane(dialogPanel);
-    
-        // Size the dialog and center it relative to MainPanel
-        helpDialog.pack();
-        helpDialog.setLocationRelativeTo(this);
-    
-        // Show it (modal)
-        helpDialog.setVisible(true);
+        HelpScreen helpScreen = new HelpScreen(this);
+        helpScreen.setVisible(true);
     }
-
-
 }
-
-
-
-
-	
-		
-		
