@@ -1,7 +1,11 @@
 package com.rokue.game.map;
 
 import java.util.HashSet;
-import com.rokue.game.utils.RNG;
+
+import com.rokue.game.entities.Archer;
+import com.rokue.game.entities.Character;
+import com.rokue.game.entities.CloakOfProtection;
+import com.rokue.game.entities.Enchantment;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.ExtraTime;
 import com.rokue.game.entities.Fighter;
@@ -11,10 +15,7 @@ import com.rokue.game.entities.Prop;
 import com.rokue.game.entities.RevealRune;
 import com.rokue.game.entities.Wizard;
 import com.rokue.game.ui.PlayPanel;
-import com.rokue.game.entities.Archer;
-import com.rokue.game.entities.Character;
-import com.rokue.game.entities.CloakOfProtection;
-import com.rokue.game.entities.Enchantment;
+import com.rokue.game.utils.RNG;
 
 
 public class Hall {
@@ -311,4 +312,55 @@ public class Hall {
     public int getRevealRuneY() {
         return revealRuneY;
     }
+
+    public boolean repOk() {
+        // Check grid dimensions and validity
+        if (grid == null || grid.length != tiles || grid[0].length != tiles) {
+            return false;
+        }
+        for (int x = 0; x < tiles; x++) {
+            for (int y = 0; y < tiles; y++) {
+                if (grid[x][y] != null && !(grid[x][y] instanceof Entity)) {
+                    return false;
+                }
+            }
+        }
+    
+        // Check characters
+        for (Character character : characters) {
+            if (character == null || !(character instanceof Character)) {
+                return false;
+            }
+        }
+    
+        // Check props
+        for (Prop prop : props) {
+            if (prop == null || !(prop instanceof Prop)) {
+                return false;
+            }
+        }
+    
+        // Check enchantments
+        for (Enchantment enchantment : enchantments) {
+            if (enchantment == null || !(enchantment instanceof Enchantment)) {
+                return false;
+            }
+        }
+    
+        // Check hero
+        if (hero != null && !characters.contains(hero)) {
+            return false;
+        }
+    
+        // Check boolean values
+        if (doorOpen != true && doorOpen != false) {
+            return false;
+        }
+        if (heroExit != true && heroExit != false) {
+            return false;
+        }
+    
+        return true;
+    }
+    
 }
