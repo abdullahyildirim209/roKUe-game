@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0fffd99b-bb8b-4c33-9b2a-7e7c48a631bd" name="Changes" comment="sounds are added">
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/rokue/game/entities/FighterTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Hero.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/map/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/map/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/rokue/game/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/rokue/game/AppTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="yusufyildirim" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;abdullahyildirim209&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/abdullahyildirim209/roKUe-game.git&quot;,
+    &quot;accountId&quot;: &quot;cd1b0f62-f1df-47d3-b1d0-65f705f594b6&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2oeOLJMyBPSqSL8eyOKA25yzJSl" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.roKUe-like-game.executor": "Run",
+    "JUnit.AppTest.executor": "Run",
+    "JUnit.FighterTests.executor": "Run",
+    "JUnit.HallTest.executor": "Run",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "irfan4",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Abdullah Yusuf/IdeaProjects/roKUe-Like",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\wav" />
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\roKUe-game\src\main\resources\sprites\MainScreenPngs" />
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites" />
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\Rune" />
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\Prop" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0fffd99b-bb8b-4c33-9b2a-7e7c48a631bd" name="Changes" comment="" />
+      <created>1731226518111</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731226518111</updated>
+      <workItem from="1731226519163" duration="673000" />
+      <workItem from="1731232464329" duration="1277000" />
+      <workItem from="1731828728454" duration="428000" />
+      <workItem from="1733588223492" duration="8028000" />
+      <workItem from="1733600735751" duration="508000" />
+      <workItem from="1733601647480" duration="1044000" />
+      <workItem from="1733602900021" duration="592000" />
+      <workItem from="1733603527463" duration="1206000" />
+      <workItem from="1733604970974" duration="27000" />
+      <workItem from="1733605030632" duration="75000" />
+      <workItem from="1733742741852" duration="66000" />
+      <workItem from="1733742833702" duration="17000" />
+      <workItem from="1733743383186" duration="148000" />
+      <workItem from="1733832531260" duration="7000" />
+      <workItem from="1733834309245" duration="6000" />
+      <workItem from="1733842216498" duration="5000" />
+      <workItem from="1733852836689" duration="136000" />
+      <workItem from="1733853020779" duration="689000" />
+      <workItem from="1733854111289" duration="2000" />
+      <workItem from="1733854892633" duration="3333000" />
+      <workItem from="1733906561643" duration="38000" />
+      <workItem from="1733906671316" duration="33000" />
+      <workItem from="1733918347239" duration="4000" />
+      <workItem from="1733918634560" duration="16000" />
+      <workItem from="1733918769430" duration="947000" />
+      <workItem from="1733920287901" duration="27000" />
+      <workItem from="1734088274193" duration="44000" />
+      <workItem from="1734094365502" duration="281000" />
+      <workItem from="1734327608533" duration="104000" />
+      <workItem from="1734327727475" duration="1598000" />
+      <workItem from="1734329841145" duration="352000" />
+      <workItem from="1734330251762" duration="8000" />
+      <workItem from="1734330387830" duration="247000" />
+      <workItem from="1734330652445" duration="685000" />
+      <workItem from="1734332407487" duration="34000" />
+      <workItem from="1734337478058" duration="259000" />
+      <workItem from="1734337751285" duration="353000" />
+      <workItem from="1734348325326" duration="74000" />
+      <workItem from="1734348464818" duration="63000" />
+      <workItem from="1734349863193" duration="349000" />
+      <workItem from="1734351181870" duration="43000" />
+      <workItem from="1734368097642" duration="1145000" />
+      <workItem from="1734370133293" duration="366000" />
+      <workItem from="1734370957522" duration="279000" />
+      <workItem from="1734371414782" duration="783000" />
+      <workItem from="1734372853573" duration="202000" />
+      <workItem from="1734385720593" duration="3000" />
+      <workItem from="1734418173213" duration="6656000" />
+      <workItem from="1734439342810" duration="623000" />
+      <workItem from="1734673661308" duration="50000" />
+      <workItem from="1734689350262" duration="3000" />
+      <workItem from="1734689539221" duration="5000" />
+      <workItem from="1734691852923" duration="4000" />
+      <workItem from="1734695889638" duration="6000" />
+      <workItem from="1734713801832" duration="793000" />
+      <workItem from="1734714633716" duration="28000" />
+      <workItem from="1734782837613" duration="64000" />
+      <workItem from="1734886799901" duration="145000" />
+      <workItem from="1734939667126" duration="547000" />
+      <workItem from="1734984558764" duration="955000" />
+      <workItem from="1735035098515" duration="2155000" />
+      <workItem from="1735037283326" duration="8000" />
+      <workItem from="1735045457016" duration="379000" />
+      <workItem from="1735052342074" duration="1216000" />
+      <workItem from="1735926075278" duration="99000" />
+      <workItem from="1736089421298" duration="343000" />
+      <workItem from="1736099549191" duration="28000" />
+      <workItem from="1736099615804" duration="797000" />
+      <workItem from="1736142507260" duration="102000" />
+      <workItem from="1736142630697" duration="8000" />
+      <workItem from="1736349240596" duration="638000" />
+      <workItem from="1736352886678" duration="860000" />
+      <workItem from="1736436147590" duration="2000" />
+      <workItem from="1736436195690" duration="1041000" />
+      <workItem from="1736525839253" duration="1114000" />
+      <workItem from="1736527328509" duration="318000" />
+      <workItem from="1736527965185" duration="671000" />
+    </task>
+    <task id="LOCAL-00001" summary="proje olusturuldu">
+      <option name="closed" value="true" />
+      <created>1731226658369</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731226658369</updated>
+    </task>
+    <task id="LOCAL-00002" summary="dependicies added">
+      <option name="closed" value="true" />
+      <created>1734368182252</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368182252</updated>
+    </task>
+    <task id="LOCAL-00003" summary="hero drawn by utku added">
+      <option name="closed" value="true" />
+      <created>1734368233583</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368233583</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Archer class and archer png added">
+      <option name="closed" value="true" />
+      <created>1734368264939</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368264939</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Archer class and archer png added">
+      <option name="closed" value="true" />
+      <created>1734368268855</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368268855</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added cloak of protection drawn by Halil">
+      <option name="closed" value="true" />
+      <created>1734368309308</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368309308</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fighter monster and its png added">
+      <option name="closed" value="true" />
+      <created>1734368331403</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368331403</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Luring gem and its png added">
+      <option name="closed" value="true" />
+      <created>1734368349905</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368349905</updated>
+    </task>
+    <task id="LOCAL-00009" summary="All other pngs are added">
+      <option name="closed" value="true" />
+      <created>1734368377091</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368377091</updated>
+    </task>
+    <task id="LOCAL-00010" summary="All other pngs are added">
+      <option name="closed" value="true" />
+      <created>1734368396267</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368396267</updated>
+    </task>
+    <task id="LOCAL-00011" summary="hero.java has generally been improved and the luring gem functions have been added.">
+      <option name="closed" value="true" />
+      <created>1734368676656</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368676656</updated>
+    </task>
+    <task id="LOCAL-00012" summary="keyboard.java has generally been improved by utku and i added b and p parts">
+      <option name="closed" value="true" />
+      <created>1734368735739</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368735739</updated>
+    </task>
+    <task id="LOCAL-00013" summary="hero.java has generally been improved by utku and the luring gem functions have been added.">
+      <option name="closed" value="true" />
+      <created>1734368789776</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368789776</updated>
+    </task>
+    <task id="LOCAL-00014" summary="dependicies">
+      <option name="closed" value="true" />
+      <created>1734368870828</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368870828</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Care was taken to keep the main plain">
+      <option name="closed" value="true" />
+      <created>1734368923490</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368923490</updated>
+    </task>
+    <task id="LOCAL-00016" summary="some functions are added">
+      <option name="closed" value="true" />
+      <created>1734368943794</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1734368943794</updated>
+    </task>
+    <task id="LOCAL-00017" summary="utkudan bakildi son hali degil">
+      <option name="closed" value="true" />
+      <created>1734369013351</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1734369013351</updated>
+    </task>
+    <task id="LOCAL-00018" summary="app.java f">
+      <option name="closed" value="true" />
+      <created>1734369026950</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1734369026950</updated>
+    </task>
+    <task id="LOCAL-00019" summary="done by utku">
+      <option name="closed" value="true" />
+      <created>1734369139368</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1734369139368</updated>
+    </task>
+    <task id="LOCAL-00020" summary="done by utku">
+      <option name="closed" value="true" />
+      <created>1734369145338</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1734369145338</updated>
+    </task>
+    <task id="LOCAL-00021" summary="done by utku i added some functions">
+      <option name="closed" value="true" />
+      <created>1734369155692</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1734369155692</updated>
+    </task>
+    <task id="LOCAL-00022" summary="an ester egg aded">
+      <option name="closed" value="true" />
+      <created>1734371036102</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1734371036102</updated>
+    </task>
+    <task id="LOCAL-00023" summary="added by toygat">
+      <option name="closed" value="true" />
+      <created>1734419768446</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1734419768446</updated>
+    </task>
+    <task id="LOCAL-00024" summary="The project was organized">
+      <option name="closed" value="true" />
+      <created>1734419815876</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1734419815876</updated>
+    </task>
+    <task id="LOCAL-00025" summary="The project was organized again">
+      <option name="closed" value="true" />
+      <created>1734420154691</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1734420154691</updated>
+    </task>
+    <task id="LOCAL-00026" summary="The project was organized again and again">
+      <option name="closed" value="true" />
+      <created>1734421821042</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1734421821042</updated>
+    </task>
+    <task id="LOCAL-00027" summary="added comments">
+      <option name="closed" value="true" />
+      <created>1735045618437</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1735045618437</updated>
+    </task>
+    <task id="LOCAL-00028" summary="sounds are added">
+      <option name="closed" value="true" />
+      <created>1736100350444</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736100350444</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="proje olusturuldu" />
+    <MESSAGE value="dependicies added" />
+    <MESSAGE value="hero drawn by utku added" />
+    <MESSAGE value="Archer class and archer png added" />
+    <MESSAGE value="Added cloak of protection drawn by Halil" />
+    <MESSAGE value="fighter monster and its png added" />
+    <MESSAGE value="Luring gem and its png added" />
+    <MESSAGE value="All other pngs are added" />
+    <MESSAGE value="hero.java has generally been improved and the luring gem functions have been added." />
+    <MESSAGE value="keyboard.java has generally been improved by utku and i added b and p parts" />
+    <MESSAGE value="hero.java has generally been improved by utku and the luring gem functions have been added." />
+    <MESSAGE value="dependicies" />
+    <MESSAGE value="Care was taken to keep the main plain" />
+    <MESSAGE value="some functions are added" />
+    <MESSAGE value="utkudan bakildi son hali degil" />
+    <MESSAGE value="app.java f" />
+    <MESSAGE value="done by utku" />
+    <MESSAGE value="done by utku i added some functions" />
+    <MESSAGE value="an ester egg aded" />
+    <MESSAGE value="added by toygat" />
+    <MESSAGE value="The project was organized" />
+    <MESSAGE value="The project was organized again" />
+    <MESSAGE value="The project was organized again and again" />
+    <MESSAGE value="added comments" />
+    <MESSAGE value="sounds are added" />
+    <option name="LAST_COMMIT_MESSAGE" value="sounds are added" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/roKUe_Like$roKUe_like_game.ic" NAME="roKUe-like-game Coverage Results" MODIFIED="1733589079386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+</project>
