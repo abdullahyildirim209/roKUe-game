@@ -39,7 +39,7 @@ public class Hall {
     Enchantment lastEnchantment = null;
     LuringGem activeLuringGem = null;
     long lastMonsterSpawn = 0;
-    RNG RNG;
+    public RNG RNG;
     
     public Hall(RNG RNG) {
         this.RNG = RNG;

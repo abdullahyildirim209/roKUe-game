@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import com.rokue.game.audio.SoundManager;
+import com.rokue.game.entities.Prop;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.BuildModeDesigner;
 import com.rokue.game.ui.MainPanel;
@@ -22,6 +23,7 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainPanel mainPanel = new MainPanel();
+            mainPanel.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
             mainPanel.setVisible(true);
         });
     }
@@ -83,14 +85,23 @@ public class Main {
         SpriteLoader spriteHandler = new SpriteLoader();
         RNG rng = new RNG();
         
-        // Example: same 2x2 approach
-        Hall[][] hallsGrid = new Hall[2][2];
+        // // Example: same 2x2 approach
+        // Hall[][] hallsGrid = new Hall[2][2];
+        // Hall[] halls = new Hall[4];
+        // int index = 0;
+        // for (int r = 0; r < 2; r++) {
+        //     for (int c = 0; c < 2; c++) {
+        //         hallsGrid[r][c] = new Hall(rng);
+        //         halls[index++] = hallsGrid[r][c];
+        //     }
+        // }
+
         Hall[] halls = new Hall[4];
-        int index = 0;
-        for (int r = 0; r < 2; r++) {
-            for (int c = 0; c < 2; c++) {
-                hallsGrid[r][c] = new Hall(rng);
-                halls[index++] = hallsGrid[r][c];
+        for (int i = 0; i < 4; i++) {
+            halls[i] = new Hall(rng);
+            for (int j = 0; j < ((i + 1) * 4 + 1 + rng.nextInt(4)); j++) {
+                int[] IDs = {2, 4, 4, 4, 4, 12, 12, 13, 13, 14, 14, 14, 14}; // crate and pillar more likely because they look good, and heart chest less likely
+                new Prop(IDs[rng.nextInt(IDs.length)]).randomlyPlace(halls[i]);;
             }
         }
 

@@ -17,7 +17,7 @@ public class Hero extends Character {
     boolean running = false;
     int runStage = 0; // 0 = default, 1 = legs up
     int runTimer = 0;
-    int health = 3;
+    public int health = 3;
     int[] inventory = {7, 2, 5};
     boolean cloakActive = false;
     private long cloakStartTime = 0; // When the cloak was activated

@@ -7,18 +7,24 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
+
+import javafx.event.ActionEvent;
+
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.Hero;
 import com.rokue.game.entities.Character;
 
 public class PlayPanel extends JPanel implements Runnable {
-    final int scale = 3; // 1x1 pixel is shown as 4x4 pixels on screen
+    final int scale = 4; // 1x1 pixel is shown as 4x4 pixels on screen
     final int scaledTileSize = Hall.getPixelsPerTile() * scale;
 
     final int screenWidth = 266 * scale;
@@ -43,6 +49,8 @@ public class PlayPanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
+    JButton pauseButton = new JButton("Pause");
+
     public static int tickTime = 0;
 
     public PlayPanel(Hall[] halls, SpriteLoader spriteLoader) {
@@ -57,6 +65,16 @@ public class PlayPanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
+        this.setLayout(null);
+        
+        pauseButton.addActionListener(e -> {
+            keyboard.pause = !keyboard.pause;
+            this.requestFocusInWindow();
+        });
+
+        pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        this.add(pauseButton);
+
     }
 
     public void startGameThread() {
@@ -97,7 +115,15 @@ public class PlayPanel extends JPanel implements Runnable {
             if (timer >= 1000000000) {
                 System.out.println("Time: " + halls[currentHallNo].getTime());
                 if (halls[currentHallNo].getTime() == 0) {
-                    System.out.println("You ran out of time.");
+                    System.out.println("Out of time.");
+                    System.out.print("Seed: ");
+                    System.out.println(halls[currentHallNo].RNG.getSeed());
+                    while(true);
+                }
+                if (hero.health == 0) {
+                    System.out.println("Death.");
+                    System.out.print("Seed: ");
+                    System.out.println(halls[currentHallNo].RNG.getSeed());
                     while(true);
                 }
                 System.out.println("FPS: " + drawCount);
@@ -113,7 +139,9 @@ public class PlayPanel extends JPanel implements Runnable {
     void update() {
         if (halls[currentHallNo].isHeroExit()) {
             if (currentHallNo == 3) {
-                System.out.println("You escaped.");
+                System.out.println("Escaped.");
+                System.out.print("Seed: ");
+                System.out.println(halls[currentHallNo].RNG.getSeed());
                 while(true);
             }
             currentHallNo++;
