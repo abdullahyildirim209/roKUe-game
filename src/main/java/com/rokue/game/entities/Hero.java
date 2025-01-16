@@ -1,7 +1,6 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
-import java.io.Serializable;
 import java.util.Arrays;
 
 import com.rokue.game.audio.SoundManager;
@@ -10,8 +9,7 @@ import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Hero extends Character implements Serializable { 
-    private static final long serialVersionUID = 1L;
+public class Hero extends Character{
     Keyboard keyboard;
 
     int looking = 0; // 0 = down, 2 = left, 4 = up, 6 = right

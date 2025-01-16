@@ -40,8 +40,8 @@ public class PlayPanel extends JPanel implements Runnable {
     Image inventoryImage = new ImageIcon(Hero.class.getResource("/sprites/inventory.png")).getImage();
     Image heartImage = new ImageIcon(Hero.class.getResource("/sprites/heart.png")).getImage();
     
-    Keyboard keyboard = new Keyboard();
-    Hero hero = new Hero(keyboard);
+    Keyboard keyboard;
+    Hero hero;
     Hall[] halls;
     int currentHallNo = 0;
     SpriteLoader spriteLoader;
@@ -53,11 +53,25 @@ public class PlayPanel extends JPanel implements Runnable {
 
     public static int tickTime = 0;
 
-    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex) {
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex,boolean isGameLoaded) {
         this.currentHallNo = currentHallIndex;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
-        hero.randomlyPlace(halls[currentHallNo]);
+
+        // check if game is loaded from save or new game because depending on that we need to add hero or not
+        if (isGameLoaded) {
+            this.keyboard = new Keyboard();
+            this.hero =halls[currentHallNo].getHero();
+            this.hero.setKeyboard(keyboard);
+            this.hero.setInventory(halls[currentHallNo].getHero().getInventory());
+            this.hero.setHealth(halls[currentHallNo].getHero().getHealth());
+            
+        } else {
+            this.keyboard = new Keyboard();
+            this.hero = new Hero(keyboard);
+            hero.randomlyPlace(halls[currentHallNo]);
+        }
+        
         halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
         halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());
 

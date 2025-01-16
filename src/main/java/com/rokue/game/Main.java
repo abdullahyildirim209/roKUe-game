@@ -70,7 +70,8 @@ public class Main {
 
                 // Start "Play" with those halls
                 int currentHallIndex = 0;
-                startPlayMode(playHalls, spriteHandler,currentHallIndex);
+                boolean isGameLoaded = false;
+                startPlayMode(playHalls, spriteHandler,currentHallIndex,isGameLoaded);
             }
         });
         checkBuildFinishedTimer.start();
@@ -108,14 +109,15 @@ public class Main {
         
         // Create the play window with these halls
         int currentHallIndex = 0;
-        startPlayMode(halls, spriteHandler, currentHallIndex);
+        boolean isGameLoaded = false;
+        startPlayMode(halls, spriteHandler, currentHallIndex, isGameLoaded);
     }
 
     /**
      * Utility method used by both startBuildMode() and startPlayMode() to
      * actually open the "Play" window with a known set of halls and an existing spriteHandler.
      */
-    private static void startPlayMode(Hall[] halls, SpriteLoader spriteHandler,int currentHallIndex) {
+    private static void startPlayMode(Hall[] halls, SpriteLoader spriteHandler,int currentHallIndex, boolean isGameLoaded) {
         SoundManager.loadSound("fighterAttack", "/sprites/wav/fighterHit.wav");
         SoundManager.loadSound("doorOpen", "/sprites/wav/kapi acilma sesi.wav");
         SoundManager.loadSound("wizard", "/sprites/wav/wizard.wav");
@@ -132,7 +134,7 @@ public class Main {
         playWindow.setTitle("RoKUe-Play");
         playWindow.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
 
-        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex);
+        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded);
         playWindow.add(playPanel);
         playWindow.pack();
         playWindow.setLocationRelativeTo(null);
@@ -149,6 +151,7 @@ public class Main {
         RNG rng = new RNG();
         
         // Create the play window with these halls
-        startPlayMode(halls, spriteHandler,currentHallIndex);
+        boolean isGameLoaded = true;
+        startPlayMode(halls, spriteHandler,currentHallIndex,isGameLoaded);
     }
 }
