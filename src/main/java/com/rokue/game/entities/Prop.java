@@ -1,11 +1,14 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.io.Serializable;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Prop extends Entity {
+public class Prop extends Entity implements Serializable { 
+    private static final long serialVersionUID = 1L;
     Image sprite;
 
     // -1 = invisible, 0 = doorLeft, 1 = doorRight, 2 = heartChest, 3 = openHeartChest, 4 = crate
@@ -84,6 +87,8 @@ public class Prop extends Entity {
             hall.getGrid()[xPosition][yPosition] = null;
         } else if (hall.runeHolder == this) {
             hall.setDoorOpen(true);
+
+            SoundManager.playSound("doorOpen");
         }
     }
 

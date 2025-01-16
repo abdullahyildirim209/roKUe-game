@@ -1,8 +1,11 @@
 package com.rokue.game.entities;
 
+import java.io.Serializable;
+
 import com.rokue.game.map.Hall;
 
-public abstract class Character extends Entity {
+public abstract class Character extends Entity implements Serializable { 
+    private static final long serialVersionUID = 1L;
     int xPixelPosition;
     int yPixelPosition;
 

@@ -2,11 +2,13 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.SpriteLoader;
 
-public abstract class Entity {
+public abstract class Entity implements Serializable { 
+    private static final long serialVersionUID = 1L;
     int xPosition;
     int yPosition;
     Hall hall;
@@ -117,4 +119,42 @@ public abstract class Entity {
     public abstract int getShadowHeight();
 
     public abstract int getShadowWidth();
+
+	public void setXPosition(int xPosition) {
+		this.xPosition = xPosition;
+	}
+
+	public void setYPosition(int yPosition) {
+		this.yPosition = yPosition;
+	}
+
+	public void setHall(Hall hall) {
+		this.hall = hall;
+	}
+
+	public void setCollisionX(int collisionX) {
+		this.collisionX = collisionX;
+	}
+
+	public void setCollisionY(int collisionY) {
+		this.collisionY = collisionY;
+	}
+
+	public void setCollisionWidth(int collisionWidth) {
+		this.collisionWidth = collisionWidth;
+	}
+
+	public void setCollisionHeight(int collisionHeight) {
+		this.collisionHeight = collisionHeight;
+	}
+
+	public void setCollisionArea(Rectangle collisionArea) {
+		this.collisionArea = collisionArea;
+	}
+
+	public void setShadow(boolean shadow) {
+		this.shadow = shadow;
+	}
+    
+    
 }

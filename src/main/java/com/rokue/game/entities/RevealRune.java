@@ -1,11 +1,13 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.io.Serializable;
 
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.SpriteLoader;
 
-public class RevealRune extends Enchantment {
+public class RevealRune extends Enchantment implements Serializable { 
+    private static final long serialVersionUID = 1L;
 
     public RevealRune() {
         super();

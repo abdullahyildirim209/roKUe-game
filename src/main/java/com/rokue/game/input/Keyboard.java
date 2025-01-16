@@ -2,8 +2,10 @@ package com.rokue.game.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.Serializable;
 
-public class Keyboard implements KeyListener {
+public class Keyboard implements KeyListener, Serializable { 
+    private static final long serialVersionUID = 1L;
 
     public boolean up, down, left, right;
     public boolean use, useLock;

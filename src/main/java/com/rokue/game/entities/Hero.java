@@ -1,14 +1,17 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.Arrays;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Hero extends Character {
+public class Hero extends Character implements Serializable { 
+    private static final long serialVersionUID = 1L;
     Keyboard keyboard;
 
     int looking = 0; // 0 = down, 2 = left, 4 = up, 6 = right
@@ -16,8 +19,8 @@ public class Hero extends Character {
     boolean running = false;
     int runStage = 0; // 0 = default, 1 = legs up
     int runTimer = 0;
-    int health = 3;
-    int[] inventory = {10, 2, 5};
+    public int health = 3;
+    int[] inventory = {7, 2, 5};
     boolean cloakActive = false;
     private long cloakStartTime = 0; // When the cloak was activated
     private final long cloakDuration = 20 * 60; // Cloak duration (20 seconds in ticks)
@@ -63,6 +66,10 @@ public class Hero extends Character {
     public void decreaseHealth() {
         if (health > 0) {
             health--;
+        }
+        if (health == 0) {
+            System.out.println("Hero died!");
+            SoundManager.playSound("fail");
         }
     }
 
@@ -265,8 +272,11 @@ public class Hero extends Character {
                 if (selectedEnchantment instanceof ExtraTime) {
                     hall.setTime(hall.getTime() + 5);
                 }
-                else addToInventory(selectedEnchantment);
-        
+                else {
+                    addToInventory(selectedEnchantment);
+                }
+
+                SoundManager.playSound("itemCollected");
                 hall.getEnchantments().remove(selectedEnchantment);
                 hall.getGrid()[selectedEnchantment.getXPosition()][selectedEnchantment.getYPosition()] = null;
                 System.out.println(Arrays.toString(inventory));
@@ -313,4 +323,59 @@ public class Hero extends Character {
     public int getShadowX() {
         return getXPixelPosition() + (cloakActive ? 1 : 3);
     }
+
+	public int[] getInventory() {
+		return inventory;
+	}
+
+	public void setKeyboard(Keyboard keyboard) {
+		this.keyboard = keyboard;
+	}
+
+	public void setLooking(int looking) {
+		this.looking = looking;
+	}
+
+	public void setLastSideLooking(boolean lastSideLooking) {
+		this.lastSideLooking = lastSideLooking;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	public void setRunStage(int runStage) {
+		this.runStage = runStage;
+	}
+
+	public void setRunTimer(int runTimer) {
+		this.runTimer = runTimer;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public void setInventory(int[] inventory) {
+		this.inventory = inventory;
+	}
+
+	public void setCloakActive(boolean cloakActive) {
+		this.cloakActive = cloakActive;
+	}
+
+	public void setCloakStartTime(long cloakStartTime) {
+		this.cloakStartTime = cloakStartTime;
+	}
+
+	public void setSelectedProp(Prop selectedProp) {
+		this.selectedProp = selectedProp;
+	}
+
+	public void setSelectedEnchantment(Enchantment selectedEnchantment) {
+		this.selectedEnchantment = selectedEnchantment;
+	}
+	
+	
+    
 }

@@ -12,7 +12,7 @@ public class RNG extends Random {
     }
 
     public RNG() {
-        this(new Random().nextInt());
+        this(new Random().nextInt(900000) + 100000);
     }
 
     public int getSeed() {

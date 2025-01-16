@@ -1,12 +1,15 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.io.Serializable;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Archer extends Character {
+public class Archer extends Character implements Serializable { 
+    private static final long serialVersionUID = 1L;
     private final long attackInterval = 60;
     private long lastAttackTime = 0;
     private boolean sideOfHero = false;
@@ -36,6 +39,7 @@ public class Archer extends Character {
             if (distance < 4 && currentTime - lastAttackTime > attackInterval && !hall.getHero().isCloakActive()) {
                 hall.getHero().decreaseHealth();
                 lastAttackTime = currentTime;
+                SoundManager.playSound("archer");
             }
         }
     }
@@ -44,5 +48,27 @@ public class Archer extends Character {
     public Image getSprite(SpriteLoader spriteLoader) {
         return spriteLoader.getMonsterSprites()[sideOfHero ? 1 : 2];
     }
+
+	public void setLastAttackTime(long lastAttackTime) {
+		this.lastAttackTime = lastAttackTime;
+	}
+
+	public void setSideOfHero(boolean sideOfHero) {
+		this.sideOfHero = sideOfHero;
+	}
+
+	public long getAttackInterval() {
+		return attackInterval;
+	}
+
+	public long getLastAttackTime() {
+		return lastAttackTime;
+	}
+
+	public boolean isSideOfHero() {
+		return sideOfHero;
+	}
+    
+    
     
 }

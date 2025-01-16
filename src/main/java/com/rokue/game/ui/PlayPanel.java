@@ -6,26 +6,40 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.rokue.game.input.Keyboard;
-import com.rokue.game.map.Hall;
+import com.rokue.game.entities.Character;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.Hero;
-import com.rokue.game.entities.Character;
+import com.rokue.game.input.Keyboard;
+import com.rokue.game.map.Hall;
+import com.rokue.game.utils.GameState;
+import com.rokue.game.utils.SaveManager;
 
 public class PlayPanel extends JPanel implements Runnable {
-    final int scale = 3; // 1x1 pixel is shown as 4x4 pixels on screen
+    final int scale = 4; // 1x1 pixel is shown as 4x4 pixels on screen
     final int scaledTileSize = Hall.getPixelsPerTile() * scale;
 
     final int screenWidth = 266 * scale;
     final int screenHeight = 360 * scale; 
-
+    
+    final int entireWidth = 400 * scale;
+    
     final int xOffset = -11 * scale;
     final int yOffset = 38 * scale;
 
     int fps = 60;
-
+    
+    Image inventoryBacground = new ImageIcon(Hero.class.getResource("/sprites/build/build_background.png")).getImage();
+    Image inventoryImage = new ImageIcon(Hero.class.getResource("/sprites/inventory.png")).getImage();
+    Image heartImage = new ImageIcon(Hero.class.getResource("/sprites/heart.png")).getImage();
+    
     Keyboard keyboard = new Keyboard();
     Hero hero = new Hero(keyboard);
     Hall[] halls;
@@ -34,21 +48,72 @@ public class PlayPanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
+    JButton pauseButton = new JButton("Pause");
+    JButton saveButton = new JButton("Save");
+
     public static int tickTime = 0;
 
-    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader) {
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex) {
+        this.currentHallNo = currentHallIndex;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
         hero.randomlyPlace(halls[currentHallNo]);
         halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
         halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());
 
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(entireWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
+        this.setLayout(null);
+
+        // ============= Pause Button ============
+        pauseButton.addActionListener(e -> {
+            keyboard.pause = !keyboard.pause;
+            this.requestFocusInWindow();
+        });
+        
+        pauseButton.addActionListener(e -> {
+            keyboard.pause = !keyboard.pause;
+            this.requestFocusInWindow();
+        });
+
+        pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        this.add(pauseButton);
+
+        pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        this.add(pauseButton);
+
+                // ============= Save Button ============
+        saveButton.addActionListener(e -> {
+            // Gather the current game state
+            GameState gameState = new GameState(
+                halls, 
+                currentHallNo, 
+                hero.getHealth(), 
+                tickTime
+                // add any other data your GameState class needs
+            );
+
+            try {
+                // For demonstration, we'll just pick a fixed filename, e.g., "mySave.sav"
+                SaveManager.saveGame(gameState, "mySave.sav");
+                JOptionPane.showMessageDialog(this, "Game saved successfully!");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error saving game: " + ex.getMessage());
+            }
+
+            // Re-focus on the panel so keyboard input continues
+            this.requestFocusInWindow();
+        });
+        // Adjust position so it doesn't overlap with Pause
+        saveButton.setBounds(entireWidth - 42 * scale, 25 * scale, 30 * scale, 15 * scale);
+        this.add(saveButton);
     }
+
+    
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -88,7 +153,15 @@ public class PlayPanel extends JPanel implements Runnable {
             if (timer >= 1000000000) {
                 System.out.println("Time: " + halls[currentHallNo].getTime());
                 if (halls[currentHallNo].getTime() == 0) {
-                    System.out.println("You ran out of time.");
+                    System.out.println("Out of time.");
+                    System.out.print("Seed: ");
+                    System.out.println(halls[currentHallNo].RNG.getSeed());
+                    while(true);
+                }
+                if (hero.health == 0) {
+                    System.out.println("Death.");
+                    System.out.print("Seed: ");
+                    System.out.println(halls[currentHallNo].RNG.getSeed());
                     while(true);
                 }
                 System.out.println("FPS: " + drawCount);
@@ -104,7 +177,9 @@ public class PlayPanel extends JPanel implements Runnable {
     void update() {
         if (halls[currentHallNo].isHeroExit()) {
             if (currentHallNo == 3) {
-                System.out.println("You escaped.");
+                System.out.println("Escaped.");
+                System.out.print("Seed: ");
+                System.out.println(halls[currentHallNo].RNG.getSeed());
                 while(true);
             }
             currentHallNo++;
@@ -138,21 +213,68 @@ public class PlayPanel extends JPanel implements Runnable {
                 }
             }
         }
-
-        g2.drawImage(spriteLoader.hallSprites[1], 0,0, screenWidth, screenHeight - 34 * scale, null);
         
-        g2.setColor(Color.RED);
-        g2.setFont(new Font("Arial", Font.BOLD, 20));
-        g2.drawString("Health: " + halls[currentHallNo].getHero().getHealth(), screenWidth - 100, 30);
-
-        if (hero.isCloakActive()) {
-            long remainingTime = (hero.getCloakDuration() - (PlayPanel.tickTime - hero.getCloakStartTime())) / 60;
-            g2.setColor(Color.CYAN);
-            g2.drawString("Cloak Time: " + remainingTime + "s", screenWidth / 2 - 73, 30);
+        // Draw Inventory Panel (right side)
+        int inventoryPanelWidth = 110 * scale; // Adjust this value
+        int inventoryPanelX = screenWidth + 12*scale;
+        
+        g2.drawImage(inventoryBacground, screenWidth, 0, entireWidth - screenWidth, screenHeight, null);
+        
+        g2.setColor(new Color(211, 211, 211));
+        g2.drawRect(inventoryPanelX, 30*scale, inventoryPanelWidth, screenHeight-30*scale);
+        
+        g2.drawImage(inventoryImage, inventoryPanelX+15*scale, screenHeight/3, 80*scale, 177*scale, null);
+        
+        g2.drawImage(spriteLoader.enchantmentSprites[0], inventoryPanelX+31*scale, 215*scale, 16*scale, 18 * scale, null);
+        g2.drawImage(spriteLoader.enchantmentSprites[1], inventoryPanelX+48*scale, 215*scale, 16*scale, 18 * scale, null);
+        g2.drawImage(spriteLoader.enchantmentSprites[2], inventoryPanelX+64*scale, 215*scale, 16*scale, 18 * scale, null);
+        
+        g2.setFont(new Font("Arial", Font.BOLD, 30));
+        g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[1]), inventoryPanelX+35*scale, 203*scale);
+        g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[0]), inventoryPanelX+52*scale, 203*scale);
+        g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[2]), inventoryPanelX+69*scale, 203*scale);
+        
+        g2.setFont(new Font("Arial", Font.BOLD, 30));
+        g2.drawString("Remaining Time:", inventoryPanelX+15*scale, 45*scale);
+        if (halls[currentHallNo].getTime()>10) {
+        	g2.setColor(Color.GREEN);	
         }
-
-        g2.setColor(Color.GREEN);
-        g2.drawString("Remaining Time: " + halls[currentHallNo].getTime() + "s" , 10, 30);
+        else {
+        	g2.setColor(Color.RED);
+        }
+        g2.drawString(halls[currentHallNo].getTime() + " s" , inventoryPanelX+15*scale, 55*scale);
+        
+        g2.setColor(new Color(211, 211, 211));
+        g2.drawString("Life:", inventoryPanelX+15*scale, 70*scale);
+        int heartCount = halls[currentHallNo].getHero().getHealth();
+        if (heartCount==0) {
+        	g2.setColor(Color.RED);
+        	g2.drawString("DIED :(", inventoryPanelX+15*scale, 80*scale);
+        }
+        else {
+        	for(int hc=0; hc<heartCount; hc++) {
+        		g2.drawImage(heartImage, inventoryPanelX+(15+16*hc)*scale, 75*scale, 16*scale, 16*scale, null);
+        	}
+        }
+        
+        if (hero.isCloakActive()) {
+        	g2.setColor(new Color(211, 211, 211));
+        	g2.drawString("Cloak Time:", inventoryPanelX+15*scale, 103*scale);
+        	long cloakTime = (hero.getCloakDuration() - (PlayPanel.tickTime - hero.getCloakStartTime())) / 60;
+        	g2.setColor(Color.CYAN);
+        	g2.drawString(cloakTime + " s", inventoryPanelX+15*scale, 113*scale);
+        }
+        
+        String hallName = "";
+        if (currentHallNo==0) hallName = "Hall Of Water";
+        else if (currentHallNo==1) hallName = "Hall Of Earth";
+        else if (currentHallNo==2) hallName = "Hall Of Fire";
+        else hallName = "Hall of Air";
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 40));
+        g2.setColor(new Color(211, 211, 211));
+        g2.drawString(hallName, screenWidth/2-40*scale, 15*scale);
+        
+        g2.drawImage(spriteLoader.hallSprites[1], 0,0, screenWidth, screenHeight - 34 * scale, null);
 
         if (halls[currentHallNo].isRevealRuneActive()) {
             int x = halls[currentHallNo].getRevealRuneX() * scaledTileSize - 33;
