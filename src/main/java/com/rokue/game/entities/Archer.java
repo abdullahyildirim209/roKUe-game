@@ -2,6 +2,8 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
@@ -13,6 +15,8 @@ public class Archer extends Character implements Serializable {
     private final long attackInterval = 60;
     private long lastAttackTime = 0;
     private boolean sideOfHero = false;
+    private List<Arrow> arrows = new ArrayList<>(); // List to store arrows
+
 
     public Archer(){
         super();
@@ -37,12 +41,22 @@ public class Archer extends Character implements Serializable {
             int distance = Math.abs(heroX - xPosition) + Math.abs(heroY - yPosition);
 
             if (distance < 4 && currentTime - lastAttackTime > attackInterval && !hall.getHero().isCloakActive()) {
+                shootArrow(heroX, heroY);
                 hall.getHero().decreaseHealth();
                 lastAttackTime = currentTime;
                 SoundManager.playSound("archer");
+                
             }
         }
+
+        // Update existing arrows
+        for (Arrow arrow : arrows) {
+            arrow.update();
+        }
+        arrows.removeIf(arrow -> !arrow.isActive()); // Remove inactive arrows
     }
+
+    
 
     @Override
     public Image getSprite(SpriteLoader spriteLoader) {
@@ -68,6 +82,15 @@ public class Archer extends Character implements Serializable {
 	public boolean isSideOfHero() {
 		return sideOfHero;
 	}
+
+    private void shootArrow(int targetX, int targetY) {
+        arrows.add(new Arrow(xPosition, yPosition, targetX, targetY, hall));
+    }
+
+    public List<Arrow> getArrows() {
+        return arrows;
+    }
+
     
     
     

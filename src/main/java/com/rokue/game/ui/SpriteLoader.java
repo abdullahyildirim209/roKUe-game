@@ -26,6 +26,8 @@ public class SpriteLoader {
 
     Image[] enchantmentSprites = new Image[8];
 
+    Image[] arrowSprites = new Image[8];
+
 
 
     public SpriteLoader() {
@@ -35,6 +37,8 @@ public class SpriteLoader {
         loadSprites(3, "rune", runeSprites);
         loadSprites(4, "monster", monsterSprites);
         loadSprites(7, "enchantment", enchantmentSprites);
+        loadSprites(7, "arrow", arrowSprites);
+        
     }
 
     public int getCurrentHallNo() {
@@ -66,6 +70,10 @@ public class SpriteLoader {
         for (int imageNumber = 0; imageNumber <= end; imageNumber++) {
             spriteArray[imageNumber] = new ImageIcon(SpriteLoader.class.getResource(String.format("/sprites/%s/%d.png", entity, imageNumber))).getImage();
         }
+    }
+
+    public Image[] getArrowSprites() {
+        return arrowSprites;
     }
 }
 

@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.rokue.game.entities.Archer;
+import com.rokue.game.entities.Arrow;
 import com.rokue.game.entities.Character;
 import com.rokue.game.entities.Entity;
 import com.rokue.game.entities.Hero;
@@ -23,7 +25,7 @@ import com.rokue.game.utils.GameState;
 import com.rokue.game.utils.SaveManager;
 
 public class PlayPanel extends JPanel implements Runnable {
-    final int scale = 4; // 1x1 pixel is shown as 4x4 pixels on screen
+    final int scale = 2; // 1x1 pixel is shown as 4x4 pixels on screen
     final int scaledTileSize = Hall.getPixelsPerTile() * scale;
 
     final int screenWidth = 266 * scale;
@@ -224,6 +226,19 @@ public class PlayPanel extends JPanel implements Runnable {
                     if (entity.getShadow()) {
                         g2.fillRect(entity.getShadowX() * scale + xOffset, entity.getShadowY() * scale + yOffset, entity.getShadowWidth() * scale, entity.getShadowHeight() * scale);
                     }
+                }
+            }
+        }
+
+        // Draw arrows
+        for (Character character : halls[currentHallNo].getCharacters()) {
+            if (character instanceof Archer) {
+                Archer archer = (Archer) character;
+                for (Arrow arrow : archer.getArrows()) {
+                    int xPixel = arrow.getX() * scaledTileSize + xOffset;
+                    int yPixel = arrow.getY() * scaledTileSize + yOffset;
+                    Image arrowImage = spriteLoader.getArrowSprites()[arrow.getDirection()];
+                    g2.drawImage(arrowImage, xPixel, yPixel, scaledTileSize, scaledTileSize, null);
                 }
             }
         }
