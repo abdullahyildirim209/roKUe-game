@@ -42,7 +42,6 @@ public class Archer extends Character implements Serializable {
 
             if (distance < 4 && currentTime - lastAttackTime > attackInterval && !hall.getHero().isCloakActive()) {
                 shootArrow(heroX, heroY);
-                hall.getHero().decreaseHealth();
                 lastAttackTime = currentTime;
                 SoundManager.playSound("archer");
                 
