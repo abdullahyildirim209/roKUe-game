@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -137,58 +138,58 @@ public class PlayPanel extends JPanel implements Runnable {
     }
 
     @Override
-    public void run() {
-        double drawInterval = 1000000000 / fps;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+public void run() {
+    double drawInterval = 1000000000 / fps;
+    double delta = 0;
+    long lastTime = System.nanoTime();
+    long currentTime;
 
-        long timer = 0;
-        int drawCount = 0;
+    long timer = 0;
+    int drawCount = 0;
 
-        while (gameThread != null) {
+    while (gameThread != null) {
+        currentTime = System.nanoTime();
+        delta += (currentTime - lastTime) / drawInterval;
+        timer += (currentTime - lastTime);
+        lastTime = currentTime;
+
+        while (keyboard.pause) {
             currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += (currentTime - lastTime);
             lastTime = currentTime;
+            System.out.print("");
+        }
 
-            while (keyboard.pause) {
-                currentTime = System.nanoTime();
-                lastTime = currentTime;
-                System.out.print("");
-            }
+        if (delta >= 1) {
+            PlayPanel.tickTime++;
+            update();
+            repaint();
+            delta--;
+            drawCount++;
+        }
 
-            if (delta >= 1) {
-                PlayPanel.tickTime++;
-                update();
-                repaint();
-                delta--;
-                drawCount++;
+        if (timer >= 1000000000) {
+            System.out.println("Time: " + halls[currentHallNo].getTime());
+            if (currentHallNo == halls.length - 1 && halls[currentHallNo].isHeroExit()) {
+                System.out.println("Player completed the last hall. Victory!");
+                switchToGameOverPanel(true); // Player wins
+                return;
             }
-
-            if (timer >= 1000000000) {
-                System.out.println("Time: " + halls[currentHallNo].getTime());
-                if (halls[currentHallNo].getTime() == 0) {
-                    System.out.println("Out of time.");
-                    System.out.print("Seed: ");
-                    System.out.println(halls[currentHallNo].RNG.getSeed());
-                    while(true);
-                }
-                if (hero.health == 0) {
-                    System.out.println("Death.");
-                    System.out.print("Seed: ");
-                    System.out.println(halls[currentHallNo].RNG.getSeed());
-                    while(true);
-                }
-                System.out.println("FPS: " + drawCount);
-                System.out.println("X: " + hero.getXPixelPosition() +" Y:" + hero.getYPixelPosition());
-                System.out.println();
-                drawCount = 0;
-                timer = 0;
-                halls[currentHallNo].setTime(halls[currentHallNo].getTime() - 1);
+            
+            // Check if time is up or hero's health is 0 (player loses)
+            if (halls[currentHallNo].getTime() == 0 || hero.health == 0) {
+                System.out.println(hero.health == 0 ? "Hero has died." : "Time has run out.");
+                switchToGameOverPanel(false); // Player loses
+                return;
             }
+            System.out.println("FPS: " + drawCount);
+            System.out.println("X: " + hero.getXPixelPosition() + " Y:" + hero.getYPixelPosition());
+            System.out.println();
+            drawCount = 0;
+            timer = 0;
+            halls[currentHallNo].setTime(halls[currentHallNo].getTime() - 1);
         }
     }
+}
 
     void update() {
         if (halls[currentHallNo].isHeroExit()) {
@@ -196,7 +197,8 @@ public class PlayPanel extends JPanel implements Runnable {
                 System.out.println("Escaped.");
                 System.out.print("Seed: ");
                 System.out.println(halls[currentHallNo].RNG.getSeed());
-                while(true);
+                switchToGameOverPanel(true); // Player wins
+                return;
             }
             currentHallNo++;
             spriteLoader.currentHallNo++;
@@ -319,5 +321,47 @@ public class PlayPanel extends JPanel implements Runnable {
 
         g2.dispose();
     }
+
+    private void switchToGameOverPanel(boolean isWin) {
+        // Stop the game thread
+        gameThread = null;
+
+        // Determine the background image based on win/lose status
+        String backgroundPath = isWin ? "/sprites/gameOver/winScreen.png" : "/sprites/gameOver/loseScreen.png";
+
+        // Use SwingUtilities to handle thread-safe operations on the GUI
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+            // If the parent frame exists, make it full screen
+            if (parentFrame != null) {
+                // Remove all existing components
+                parentFrame.getContentPane().removeAll();
+
+                // Remove decorations for full-screen mode
+                parentFrame.dispose();
+                parentFrame.setUndecorated(true); // Remove window decorations
+                parentFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize to full screen
+
+                // Add the GameOverPanel
+                GameOverPanel gameOverPanel = new GameOverPanel(
+                    backgroundPath,
+                    () -> {
+                        // Return to Main Menu
+                        parentFrame.dispose();
+                        new MainPanel().setVisible(true); // Open MainPanel in a new frame
+                    }
+                );
+                parentFrame.add(gameOverPanel);
+
+                // Revalidate and repaint the frame
+                parentFrame.setVisible(true);
+                parentFrame.revalidate();
+                parentFrame.repaint();
+            }
+        });
+    }
+
+    
 
 }
