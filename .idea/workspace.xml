@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fffd99b-bb8b-4c33-9b2a-7e7c48a631bd" name="Changes" comment="sounds are added">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/rokue/game/entities/FighterTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Hero.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/map/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/map/Hall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/rokue/game/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/rokue/game/AppTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Archer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Archer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Fighter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/entities/Fighter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/input/Keyboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/input/Keyboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rokue/game/ui/SpriteLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rokue/game/ui/SpriteLoader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,38 +52,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.roKUe-like-game.executor": "Run",
-    "JUnit.AppTest.executor": "Run",
-    "JUnit.FighterTests.executor": "Run",
-    "JUnit.HallTest.executor": "Run",
-    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "irfan4",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Abdullah Yusuf/IdeaProjects/roKUe-Like",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.roKUe-like-game.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AppTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FighterTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HallTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Group9Test&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Abdullah Yusuf/IdeaProjects/roKUe-Like&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\monster" />
+      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites" />
       <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\wav" />
       <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\roKUe-game\src\main\resources\sprites\MainScreenPngs" />
-      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites" />
       <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\Rune" />
-      <recent name="C:\Users\Abdullah Yusuf\IdeaProjects\roKUe-Like\src\main\resources\sprites\Prop" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -179,6 +179,8 @@
       <workItem from="1736525839253" duration="1114000" />
       <workItem from="1736527328509" duration="318000" />
       <workItem from="1736527965185" duration="671000" />
+      <workItem from="1737196869620" duration="147000" />
+      <workItem from="1737198042253" duration="719000" />
     </task>
     <task id="LOCAL-00001" summary="proje olusturuldu">
       <option name="closed" value="true" />

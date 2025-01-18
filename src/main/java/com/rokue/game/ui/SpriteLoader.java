@@ -22,7 +22,7 @@ public class SpriteLoader {
     Image[] hallSprites = new Image[2];
 
     // 0 = wizard, 1,2 = archer, 3,4 = fighter
-    Image[] monsterSprites = new Image[5];
+    Image[] monsterSprites = new Image[9];
 
     Image[] enchantmentSprites = new Image[8];
 
@@ -33,7 +33,7 @@ public class SpriteLoader {
         loadSprites(29, "prop", propSprites);
         loadSprites(1, "hall", hallSprites);
         loadSprites(3, "rune", runeSprites);
-        loadSprites(4, "monster", monsterSprites);
+        loadSprites(8, "monster", monsterSprites);
         loadSprites(7, "enchantment", enchantmentSprites);
     }
 
