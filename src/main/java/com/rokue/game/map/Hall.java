@@ -29,6 +29,7 @@ public class Hall implements Serializable {
     boolean doorOpen = false;
     public Prop runeHolder;
     int time;
+    int totalTime;
     Entity[][] grid = new Entity[tiles][tiles];
     HashSet<Character> characters = new HashSet<>();
     Hero hero = null;
@@ -90,8 +91,13 @@ public class Hall implements Serializable {
         return time;
     }
 
+    public int getTotalTime() {
+        return totalTime;
+    }
+
     public void setTime(int t) {
         time = t;
+        totalTime = t;
     }
 
     public Entity[][] getGrid() {
