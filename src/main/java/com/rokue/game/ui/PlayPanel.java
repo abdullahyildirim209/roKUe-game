@@ -301,8 +301,8 @@ public void run() {
         g2.drawImage(spriteLoader.hallSprites[1], 0,0, screenWidth, screenHeight - 34 * scale, null);
 
         if (halls[currentHallNo].isRevealRuneActive()) {
-            int x = halls[currentHallNo].getRevealRuneX() * scaledTileSize - 33;
-            int y = halls[currentHallNo].getRevealRuneY() * scaledTileSize + 113;
+            int x = halls[currentHallNo].getRevealRuneX() * scaledTileSize - 11 * scale;
+            int y = halls[currentHallNo].getRevealRuneY() * scaledTileSize + 38 * scale;
             int w = 4 * scaledTileSize;
             int h = 4 * scaledTileSize;
             g2.setColor(new Color(50, 255, 50, 40)); 
