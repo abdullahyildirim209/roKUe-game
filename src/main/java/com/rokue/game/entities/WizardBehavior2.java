@@ -1,10 +1,13 @@
 package com.rokue.game.entities;
 
+import java.io.Serializable;
+
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 
-public class WizardBehavior2 extends WizardBehavior{
+public class WizardBehavior2 extends WizardBehavior implements Serializable{
+    private static final long serialVersionUID = 1L;
     private final long changeInterval = 3 * 60;
     private long lastChangeTime = 0;
     

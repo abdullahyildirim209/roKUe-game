@@ -105,6 +105,8 @@ public class MainPanel extends JFrame {
             int currentHallIndex = loadedState.getCurrentHallIndex();
             int heroLives = loadedState.getHeroLives();
             long globalTime = loadedState.getGlobalTime();
+            //PlayPanel.tickTime = loadedState.getTime();
+            halls[currentHallIndex].setTime(loadedState.getTime());
 
             
             Main.startPlayMode(halls, currentHallIndex, heroLives, globalTime);

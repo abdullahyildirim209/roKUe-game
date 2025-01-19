@@ -149,7 +149,9 @@ public class Main {
         // If you want a simple layout or want to load from a file, do it here.
         SpriteLoader spriteHandler = new SpriteLoader();
         RNG rng = new RNG();
-        
+
+
+
         // Create the play window with these halls
         boolean isGameLoaded = true;
         startPlayMode(halls, spriteHandler,currentHallIndex,isGameLoaded);

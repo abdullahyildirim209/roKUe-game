@@ -12,14 +12,16 @@ public class GameState implements Serializable {
     private int currentHallIndex;   // if your game tracks which hall is active
     private int heroLives;          // or store inside your Hero object
     private long globalTime;        // or store inside each Hall’s time, etc.
+    private int loadTime; 
     // Any other global-level data: scores, etc.
 
     // Constructors, getters, setters
-    public GameState(Hall[] halls, int currentHallIndex, int heroLives, long globalTime) {
+    public GameState(Hall[] halls, int currentHallIndex, int heroLives, long globalTime, int time) {
         this.halls = halls;
         this.currentHallIndex = currentHallIndex;
         this.heroLives = heroLives;
         this.globalTime = globalTime;
+        this.loadTime = time;
     }
 
     public Hall[] getHalls() {
@@ -36,5 +38,9 @@ public class GameState implements Serializable {
 
     public long getGlobalTime() {
         return globalTime;
+    }
+
+    public int getTime(){
+        return loadTime;
     }
 }

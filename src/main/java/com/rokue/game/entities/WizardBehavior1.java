@@ -1,9 +1,12 @@
 package com.rokue.game.entities;
 
+import java.io.Serializable;
+
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 
-public class WizardBehavior1 extends WizardBehavior{
+public class WizardBehavior1 extends WizardBehavior implements Serializable{
+    private static final long serialVersionUID = 1L;
     private final long randomlyPlaceTime =  60 / 2;
     private final long disappearTime = 1 * 60;
     private final long appearTime;
