@@ -311,6 +311,20 @@ public void run() {
             g2.drawRect(x, y, w, h);
         }
 
+        // pause button
+        g2.setColor(new Color(211, 211, 211));
+        g2.fillRect(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        g2.setColor(Color.BLACK);
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 12 * scale));
+        g2.drawString("Pause", entireWidth - 42 * scale, 18 * scale);
+
+        // save button
+        g2.setColor(new Color(211, 211, 211));
+        g2.fillRect(entireWidth - 42 * scale, 25 * scale, 30 * scale, 15 * scale);
+        g2.setColor(Color.BLACK);
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 12 * scale));
+        g2.drawString("Save", entireWidth - 39 * scale, 36 * scale);
+
         g2.dispose();
     }
 
