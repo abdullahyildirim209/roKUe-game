@@ -71,7 +71,7 @@ public class Main {
                 // Start "Play" with those halls
                 int currentHallIndex = 0;
                 boolean isGameLoaded = false;
-                startPlayMode(playHalls, spriteHandler,currentHallIndex,isGameLoaded);
+                startPlayMode(playHalls, spriteHandler,currentHallIndex,isGameLoaded,0);
             }
         });
         checkBuildFinishedTimer.start();
@@ -110,14 +110,14 @@ public class Main {
         // Create the play window with these halls
         int currentHallIndex = 0;
         boolean isGameLoaded = false;
-        startPlayMode(halls, spriteHandler, currentHallIndex, isGameLoaded);
+        startPlayMode(halls, spriteHandler, currentHallIndex, isGameLoaded,0);
     }
 
     /**
      * Utility method used by both startBuildMode() and startPlayMode() to
      * actually open the "Play" window with a known set of halls and an existing spriteHandler.
      */
-    private static void startPlayMode(Hall[] halls, SpriteLoader spriteHandler,int currentHallIndex, boolean isGameLoaded) {
+    private static void startPlayMode(Hall[] halls, SpriteLoader spriteHandler,int currentHallIndex, boolean isGameLoaded, int remainingTime) {
         SoundManager.loadSound("fighterAttack", "/sprites/wav/fighterHit.wav");
         SoundManager.loadSound("doorOpen", "/sprites/wav/kapi acilma sesi.wav");
         SoundManager.loadSound("wizard", "/sprites/wav/wizard.wav");
@@ -134,7 +134,7 @@ public class Main {
         playWindow.setTitle("RoKUe-Play");
         playWindow.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
 
-        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded);
+        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded, remainingTime);
         playWindow.add(playPanel);
         playWindow.pack();
         playWindow.setLocationRelativeTo(null);
@@ -144,7 +144,7 @@ public class Main {
         playPanel.startGameThread();
     }
 
-    public static void startPlayMode(Hall[] halls, int currentHallIndex, int heroLives, long globalTime) {
+    public static void startPlayMode(Hall[] halls, int currentHallIndex, int heroLives, long globalTime, int remainingTime) {
         // When you are loading from a save, this method is used
         // If you want a simple layout or want to load from a file, do it here.
         SpriteLoader spriteHandler = new SpriteLoader();
@@ -154,6 +154,6 @@ public class Main {
 
         // Create the play window with these halls
         boolean isGameLoaded = true;
-        startPlayMode(halls, spriteHandler,currentHallIndex,isGameLoaded);
+        startPlayMode(halls, spriteHandler,currentHallIndex,isGameLoaded,remainingTime);
     }
 }

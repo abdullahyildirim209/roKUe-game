@@ -106,10 +106,10 @@ public class MainPanel extends JFrame {
             int heroLives = loadedState.getHeroLives();
             long globalTime = loadedState.getGlobalTime();
             //PlayPanel.tickTime = loadedState.getTime();
-            halls[currentHallIndex].setTime(loadedState.getTime());
+            int remainingTime = loadedState.getTime();
 
             
-            Main.startPlayMode(halls, currentHallIndex, heroLives, globalTime);
+            Main.startPlayMode(halls, currentHallIndex, heroLives, globalTime, remainingTime);
 
             JOptionPane.showMessageDialog(this, "Game loaded successfully!");
         } catch (Exception ex) {

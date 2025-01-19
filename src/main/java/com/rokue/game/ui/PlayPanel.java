@@ -56,7 +56,7 @@ public class PlayPanel extends JPanel implements Runnable {
 
     public static int tickTime = 0;
 
-    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex,boolean isGameLoaded) {
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex,boolean isGameLoaded,int remainingTime) {
         this.currentHallNo = currentHallIndex;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
@@ -68,6 +68,7 @@ public class PlayPanel extends JPanel implements Runnable {
             this.hero.setKeyboard(keyboard);
             this.hero.setInventory(halls[currentHallNo].getHero().getInventory());
             this.hero.setHealth(halls[currentHallNo].getHero().getHealth());
+
             
         } else {
             this.keyboard = new Keyboard();
@@ -76,7 +77,12 @@ public class PlayPanel extends JPanel implements Runnable {
         }
         
         halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
-        halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size()); // change here
+        if(isGameLoaded){
+            halls[currentHallNo].setTime(remainingTime); // change here    
+        }
+        else{
+        halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());// change here
+    } 
 
         this.setPreferredSize(new Dimension(entireWidth, screenHeight));
         this.setBackground(Color.black);
@@ -115,6 +121,7 @@ public class PlayPanel extends JPanel implements Runnable {
                         GameState gameState = new GameState(
                             halls, currentHallNo, hero.getHealth(), tickTime, halls[currentHallNo].getTime()
                         );
+                    
                         SaveManager.saveGame(gameState, fileName);
                         System.out.println("Game saved successfully as " + fileName); // Save success
                         JOptionPane.showMessageDialog(this, "Game saved successfully!");
