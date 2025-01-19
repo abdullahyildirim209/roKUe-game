@@ -94,35 +94,53 @@ public class PlayPanel extends JPanel implements Runnable {
         pauseButton.setBounds(entireWidth - 84 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(pauseButton);
 
-                // ============= Save Button ============
+         // ============= Save Button ============
         saveButton.addActionListener(e -> {
-            // Gather the current game state
-            GameState gameState = new GameState(
-                halls, 
-                currentHallNo, 
-                hero.getHealth(), 
-                tickTime
-                // add any other data your GameState class needs
+            System.out.println("Save button clicked."); // Debug: Button clicked
+            String fileName = JOptionPane.showInputDialog(
+                this,
+                "Enter the name of the save file:",
+                "Save Game",
+                JOptionPane.PLAIN_MESSAGE
             );
 
-            try {
-                // For demonstration, we'll just pick a fixed filename, e.g., "mySave.sav"
-                SaveManager.saveGame(gameState, "mySave.sav");
-                JOptionPane.showMessageDialog(this, "Game saved successfully!");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error saving game: " + ex.getMessage());
+            if (fileName != null) {
+                System.out.println("User entered filename: " + fileName); // Debug: Log the filename
+                if (!fileName.trim().isEmpty()) {
+                    if (!fileName.endsWith(".sav")) {
+                        fileName += ".sav";
+                    }
+                    System.out.println("Final filename to save: " + fileName); // Debug: Confirm final filename
+                    try {
+                        GameState gameState = new GameState(
+                            halls, currentHallNo, hero.getHealth(), tickTime
+                        );
+                        SaveManager.saveGame(gameState, fileName);
+                        System.out.println("Game saved successfully as " + fileName); // Debug: Save success
+                        JOptionPane.showMessageDialog(this, "Game saved successfully!");
+                    } catch (IOException ex) {
+                        System.err.println("Error saving game: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Invalid filename entered."); // Debug: Log invalid input
+                    JOptionPane.showMessageDialog(this, "Invalid filename. Try again.");
+                }
+            } else {
+                System.out.println("Save operation canceled by the user."); // Debug: User canceled
             }
 
-            // Re-focus on the panel so keyboard input continues
-            this.requestFocusInWindow();
+            // Restore keyboard focus to PlayPanel after dialog closes
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                this.requestFocusInWindow();
+                System.out.println("Focus returned to PlayPanel."); // Debug: Focus restored
+            });
         });
-        // Adjust position so it doesn't overlap with Pause
+
+        // Set button bounds and add to panel
         saveButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(saveButton);
     }
-
-    
 
     public void startGameThread() {
         gameThread = new Thread(this);
