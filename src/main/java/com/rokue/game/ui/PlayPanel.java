@@ -90,14 +90,6 @@ public class PlayPanel extends JPanel implements Runnable {
             keyboard.pause = !keyboard.pause;
             this.requestFocusInWindow();
         });
-        
-        pauseButton.addActionListener(e -> {
-            keyboard.pause = !keyboard.pause;
-            this.requestFocusInWindow();
-        });
-
-        pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
-        this.add(pauseButton);
 
         pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(pauseButton);
