@@ -48,11 +48,13 @@ public class Hall implements Serializable {
     public Hall(RNG RNG) {
         this.RNG = RNG;
 
+        int randomDoorLeftX = RNG.nextInt(15) + 1; // random position for door
+
         // cover the outer edges with invisible props to prevent going out of bounds
         for (int y = 0; y < tiles; y++) {
             for (int x = 0; x < tiles; x++) {
-                if (y == 0 && (x == 8 || x == 9)) { // add the door
-                    new Prop(x - 8).place(x, y, this);
+                if (y == 0 && (x == randomDoorLeftX || x == (randomDoorLeftX + 1))) { // add the door
+                    new Prop(x - randomDoorLeftX).place(x, y, this);
                 } else if (y == 0 || y == 17 || x == 0 || x == 17) {
                     new Prop(-1).place(x, y, this);
                 }
