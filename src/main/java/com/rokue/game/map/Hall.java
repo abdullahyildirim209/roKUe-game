@@ -2,6 +2,7 @@ package com.rokue.game.map;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.rokue.game.entities.Archer;
 import com.rokue.game.entities.Character;
@@ -97,6 +98,9 @@ public class Hall implements Serializable {
 
     public void setTime(int t) {
         time = t;
+    }
+
+    public void setTotalTime(int t) {
         totalTime = t;
     }
 
@@ -135,6 +139,17 @@ public class Hall implements Serializable {
     }
 
     public void update() {
+        // Remove Wizards if not active
+        Iterator<Character> i = characters.iterator();
+        while (i.hasNext()) {
+            Character c = i.next();
+            if (c instanceof Wizard) {
+                if (!((Wizard) c).isActive()) {
+                    i.remove();
+                }
+            }
+        }
+
         // RevealRune deactivate
         if (PlayPanel.tickTime - lastRevealRuneTime > 10*60) {
             deactivateRevealRune();

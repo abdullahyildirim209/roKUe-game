@@ -59,7 +59,7 @@ public class Archer extends Character implements Serializable {
 
     @Override
     public Image getSprite(SpriteLoader spriteLoader) {
-        return spriteLoader.getMonsterSprites()[sideOfHero ? 1 : 2];
+        return spriteLoader.getMonsterSprites()[sideOfHero ? 3 : 4];
     }
 
 	public void setLastAttackTime(long lastAttackTime) {

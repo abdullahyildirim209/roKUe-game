@@ -61,6 +61,17 @@ public class Hero extends Character{
         hall.setHero(this);
     }
 
+    public void randomlyChangePlace() {
+        int[] position = hall.getRandomEmptyTilePosition();
+        hall.getGrid()[xPosition][yPosition] = null;
+        xPosition = position[0];
+        yPosition = position[1];
+        xPixelPosition = xPosition * Hall.getPixelsPerTile();
+        yPixelPosition = yPosition * Hall.getPixelsPerTile() - 7;
+        hall.getGrid()[xPosition][yPosition] = this;
+    }
+
+
     public void decreaseHealth() {
         if (health > 0) {
             health--;

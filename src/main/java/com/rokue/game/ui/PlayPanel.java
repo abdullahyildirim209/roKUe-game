@@ -140,6 +140,7 @@ public void run() {
     int drawCount = 0;
 
     while (gameThread != null) {
+        halls[currentHallNo].setTotalTime(5 + 5 * halls[currentHallNo].getProps().size());
         currentTime = System.nanoTime();
         delta += (currentTime - lastTime) / drawInterval;
         timer += (currentTime - lastTime);

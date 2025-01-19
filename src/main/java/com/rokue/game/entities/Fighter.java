@@ -141,9 +141,9 @@ public class Fighter extends Character implements Serializable {
     @Override
     public Image getSprite(SpriteLoader spriteLoader) {
         if (followLuringGem && targetX != -1 && targetY != -1)
-            return spriteLoader.getMonsterSprites()[targetX > xPosition ? 3 : 4];
+            return spriteLoader.getMonsterSprites()[targetX > xPosition ? 5 : 6];
         else 
-            return spriteLoader.getMonsterSprites()[sideOfHero ? 3 : 4];
+            return spriteLoader.getMonsterSprites()[sideOfHero ? 5 : 6];
 
     }
 
