@@ -91,7 +91,7 @@ public class PlayPanel extends JPanel implements Runnable {
             this.requestFocusInWindow();
         });
 
-        pauseButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        pauseButton.setBounds(entireWidth - 84 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(pauseButton);
 
                 // ============= Save Button ============
@@ -118,7 +118,7 @@ public class PlayPanel extends JPanel implements Runnable {
             this.requestFocusInWindow();
         });
         // Adjust position so it doesn't overlap with Pause
-        saveButton.setBounds(entireWidth - 42 * scale, 25 * scale, 30 * scale, 15 * scale);
+        saveButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(saveButton);
     }
 
@@ -314,17 +314,21 @@ public void run() {
 
         // pause button
         g2.setColor(new Color(211, 211, 211));
-        g2.fillRect(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        g2.fillRect(entireWidth - 84 * scale, 7 * scale, 30 * scale, 15 * scale);
+        // g2.fillRect(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Times New Roman", Font.BOLD, 12 * scale));
-        g2.drawString("Pause", entireWidth - 42 * scale, 18 * scale);
+        g2.drawString("Pause", entireWidth - 84 * scale, 18 * scale);
+        // g2.drawString("Pause", entireWidth - 42 * scale, 18 * scale);
 
         // save button
         g2.setColor(new Color(211, 211, 211));
-        g2.fillRect(entireWidth - 42 * scale, 25 * scale, 30 * scale, 15 * scale);
+        g2.fillRect(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
+        // g2.fillRect(entireWidth - 42 * scale, 25 * scale, 30 * scale, 15 * scale);
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Times New Roman", Font.BOLD, 12 * scale));
-        g2.drawString("Save", entireWidth - 39 * scale, 36 * scale);
+        g2.drawString("Save",entireWidth - 40 * scale, 18 * scale);
+        // g2.drawString("Save", entireWidth - 39 * scale, 36 * scale);
 
         g2.dispose();
     }
