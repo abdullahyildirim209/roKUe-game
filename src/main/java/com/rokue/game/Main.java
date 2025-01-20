@@ -156,4 +156,9 @@ public class Main {
         boolean isGameLoaded = true;
         startPlayMode(halls, spriteHandler,currentHallIndex,isGameLoaded,remainingTime);
     }
+
+    public static void showMainMenu() {
+        MainPanel mainPanel = new MainPanel();
+        mainPanel.setVisible(true);
+    }
 }

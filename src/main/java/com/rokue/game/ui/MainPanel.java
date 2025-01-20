@@ -7,12 +7,7 @@ import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.rokue.game.Main;
 import com.rokue.game.map.Hall;
@@ -34,11 +29,12 @@ public class MainPanel extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Load and draw background image
-                Image backgroundImage = new ImageIcon(SpriteLoader.class.getResource("/sprites/MainMenu.jpg")).getImage();
+                Image backgroundImage = 
+                    new ImageIcon(SpriteLoader.class.getResource("/sprites/MainMenu.jpg")).getImage();
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        contentPane.setLayout(null); // Initial layout for dynamic resizing
+        contentPane.setLayout(null); 
         setContentPane(contentPane);
 
         // Create buttons
@@ -46,6 +42,7 @@ public class MainPanel extends JFrame {
         JButton buildModeButton = createTransparentButton("Build Mode");
         JButton helpButton = createTransparentButton("Help");
         JButton loadButton = createTransparentButton("Load Game");
+
         // Add buttons to content pane
         contentPane.add(playGameButton);
         contentPane.add(buildModeButton);
@@ -60,10 +57,22 @@ public class MainPanel extends JFrame {
                 int height = getHeight();
 
                 // Dynamically align buttons
-                playGameButton.setBounds(width * 175 / 1000, height * 68 / 100, width * 10 / 100, height * 10 / 100);
-                buildModeButton.setBounds(width * 47 / 100, height * 68 / 100, width * 10 / 100, height * 10 / 100);
-                helpButton.setBounds(width * 76 / 100, height * 68 / 100, width * 10 / 100, height * 10 / 100);
-                loadButton.setBounds(width * 47 / 100, height * 80 / 100, width * 10 / 100, height * 10 / 100);
+                playGameButton.setBounds(
+                    width * 175 / 1000, height * 68 / 100, 
+                    width * 10 / 100, height * 10 / 100
+                );
+                buildModeButton.setBounds(
+                    width * 47 / 100, height * 68 / 100, 
+                    width * 10 / 100, height * 10 / 100
+                );
+                helpButton.setBounds(
+                    width * 76 / 100, height * 68 / 100, 
+                    width * 10 / 100, height * 10 / 100
+                );
+                loadButton.setBounds(
+                    width * 47 / 100, height * 80 / 100, 
+                    width * 10 / 100, height * 10 / 100
+                );
             }
         });
 
@@ -78,55 +87,87 @@ public class MainPanel extends JFrame {
         });
         helpButton.addActionListener(e -> showHelpDialog());
 
+        // "Load Game" button logic
         loadButton.addActionListener(e -> {
+            // List available saves
             List<String> saves = SaveManager.listSaveFiles();
+
+            // Dispose of the main menu before showing dialog 
+            // so it disappears in the background
             dispose();
+
+            // If no save files exist, show a message and return to main menu
             if (saves.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "No save files found.");
-        return;
+                setOptionPaneColors();
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "No save files found."
+                );
+                returnToMainMenu();
+                return;
             }
-            // Let the user pick from a list
+
+            // Set custom background color for dialog
+            setOptionPaneColors();
+
+            // Show the input dialog to choose a save file
             String selectedFile = (String) JOptionPane.showInputDialog(
-            this, 
-            "Select a save file", 
-            "Load Game", 
-            JOptionPane.PLAIN_MESSAGE,
-            null, 
-            saves.toArray(), 
-            saves.get(0)
-    );
+                this,
+                "Select a save file",
+                "Load Game",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                saves.toArray(),
+                saves.get(0)
+            );
 
-    if (selectedFile != null) {
-        try {
-            GameState loadedState = SaveManager.loadGame(selectedFile);
+            // If user cancels or closes the dialog (selectedFile == null),
+            // go back to main menu
+            if (selectedFile == null) {
+                returnToMainMenu();
+                return;
+            }
 
-            // Then restore your game environment
-            Hall[] halls = loadedState.getHalls();
-            int currentHallIndex = loadedState.getCurrentHallIndex();
-            int heroLives = loadedState.getHeroLives();
-            long globalTime = loadedState.getGlobalTime();
-            //PlayPanel.tickTime = loadedState.getTime();
-            int remainingTime = loadedState.getTime();
+            // Otherwise, attempt to load the selected game file
+            try {
+                GameState loadedState = SaveManager.loadGame(selectedFile);
 
-            
-            Main.startPlayMode(halls, currentHallIndex, heroLives, globalTime, remainingTime);
+                // Retrieve data from loaded game state
+                Hall[] halls = loadedState.getHalls();
+                int currentHallIndex = loadedState.getCurrentHallIndex();
+                int heroLives = loadedState.getHeroLives();
+                long globalTime = loadedState.getGlobalTime();
+                int remainingTime = loadedState.getTime();
 
-            JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading game: " + ex.getMessage());
-        }
-    }
-    }
-        );
+                // Launch the play mode with restored state
+                Main.startPlayMode(halls, currentHallIndex, heroLives, globalTime, remainingTime);
 
-        // Trigger initial resize to position buttons
+                // Confirm successful load
+                setOptionPaneColors();
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Game loaded successfully!"
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                setOptionPaneColors();
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error loading game: " + ex.getMessage()
+                );
+                // Return to main menu on error (optional)
+                returnToMainMenu();
+            }
+        });
+
+        // Trigger initial layout
         revalidate();
         repaint();
-        
     }
-    
 
+    /**
+     * Utility method to create a transparent-looking button.
+     */
     private JButton createTransparentButton(String text) {
         JButton button = new JButton(text);
         button.setOpaque(false);
@@ -138,8 +179,29 @@ public class MainPanel extends JFrame {
         return button;
     }
 
+    /**
+     * Shows a custom 'Help' dialog.
+     */
     private void showHelpDialog() {
         HelpScreen helpScreen = new HelpScreen(this);
         helpScreen.setVisible(true);
+    }
+
+    /**
+     * Resets to the main menu by creating a new MainPanel instance.
+     */
+    private void returnToMainMenu() {
+        MainPanel mainPanel = new MainPanel();
+        mainPanel.setVisible(true);
+    }
+
+    /**
+     * Applies your desired colors to JOptionPane before showing a dialog.
+     * (If you want a background image instead, you'll need a custom UI, 
+     * which is more involved than just setting these properties.)
+     */
+    private void setOptionPaneColors() {
+        UIManager.put("OptionPane.background", new Color(110, 80, 57));
+        UIManager.put("Panel.background", new Color(110, 80, 57));
     }
 }
