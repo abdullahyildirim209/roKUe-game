@@ -2,18 +2,25 @@ package com.rokue.game.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.Serializable;
 
-public class Keyboard implements KeyListener, Serializable { 
+public class Keyboard implements KeyListener, MouseListener, Serializable {
     private static final long serialVersionUID = 1L;
 
+    // Existing fields
     public boolean up, down, left, right;
     public boolean use, useLock;
     public boolean r, p, b, w, a, s, d;
     public boolean pause, pauseLock;
 
+    // === New mouse fields ===
+    public boolean mouseButtonPressed;    // Tracks if the left mouse button was pressed
+    private boolean mouseLock;            // Used to avoid repeated triggers from press+release
+
     @Override
-    public void keyTyped(KeyEvent e) {} // unused but required due to implemented interface
+    public void keyTyped(KeyEvent e) {} // unused but required
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -84,4 +91,30 @@ public class Keyboard implements KeyListener, Serializable {
             pauseLock = false;
         }
     }
+
+    // === Implement MouseListener to detect clicks ===
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Not strictly needed if we rely on mousePressed
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1 && !mouseLock) {
+            mouseButtonPressed = true;
+            mouseLock = true;
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            mouseLock = false;
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }

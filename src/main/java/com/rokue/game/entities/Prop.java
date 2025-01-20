@@ -122,4 +122,10 @@ public class Prop extends Entity implements Serializable {
         return 16;
     }
 
+    public void interact() {
+        // For now, let's just reuse the existing "search" logic
+        search();
+    }
+    
+
 }

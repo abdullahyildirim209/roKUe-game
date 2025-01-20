@@ -9,6 +9,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.IOException;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -56,99 +61,112 @@ public class PlayPanel extends JPanel implements Runnable {
 
     public static int tickTime = 0;
 
-    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader,int currentHallIndex,boolean isGameLoaded,int remainingTime) {
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader, int currentHallIndex, boolean isGameLoaded, int remainingTime) {
         this.currentHallNo = currentHallIndex;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
-
-        // check if game is loaded from save or new game because depending on that we need to add hero or not
+    
+        // Initialize keyboard
+        this.keyboard = new Keyboard();
+    
+        // Add MouseListener for debugging
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    System.out.println("Mouse left button pressed at (" + e.getX() + ", " + e.getY() + ")");
+                    keyboard.mouseButtonPressed = true; // Optional: Set this flag for the Keyboard
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    System.out.println("Mouse right button pressed at (" + e.getX() + ", " + e.getY() + ")");
+                } else {
+                    System.out.println("Other mouse button pressed at (" + e.getX() + ", " + e.getY() + ")");
+                }
+            }
+    
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("Mouse button released at (" + e.getX() + ", " + e.getY() + ")");
+                keyboard.mouseButtonPressed = false; // Reset flag
+            }
+    
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Mouse clicked at (" + e.getX() + ", " + e.getY() + "), click count: " + e.getClickCount());
+            }
+        });
+    
+        // Ensure PlayPanel is focusable to capture mouse events
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+    
+        // Check if game is loaded from save or new game
         if (isGameLoaded) {
-            this.keyboard = new Keyboard();
-            this.hero =halls[currentHallNo].getHero();
+            this.hero = halls[currentHallNo].getHero();
             this.hero.setKeyboard(keyboard);
             this.hero.setInventory(halls[currentHallNo].getHero().getInventory());
             this.hero.setHealth(halls[currentHallNo].getHero().getHealth());
-
-            
         } else {
-            this.keyboard = new Keyboard();
             this.hero = new Hero(keyboard);
             hero.randomlyPlace(halls[currentHallNo]);
         }
-        
+    
         halls[currentHallNo].runeHolder = halls[currentHallNo].getRandomProp();
-        if(isGameLoaded){
-            halls[currentHallNo].setTime(remainingTime); // change here    
+        if (isGameLoaded) {
+            halls[currentHallNo].setTime(remainingTime); 
+        } else {
+            halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());
         }
-        else{
-        halls[currentHallNo].setTime(5 + 5 * halls[currentHallNo].getProps().size());// change here
-    } 
-
+    
+        // Set panel properties
         this.setPreferredSize(new Dimension(entireWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyboard);
         this.setFocusable(true);
         this.setLayout(null);
-
-        // ============= Pause Button ============
+    
+        // Pause button
         pauseButton.addActionListener(e -> {
             keyboard.pause = !keyboard.pause;
             this.requestFocusInWindow();
         });
-
         pauseButton.setBounds(entireWidth - 84 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(pauseButton);
-
-         // ============= Save Button ============
+    
+        // Save button
         saveButton.addActionListener(e -> {
-            System.out.println("Save button clicked."); // Button clicked
+            System.out.println("Save button clicked.");
             String fileName = JOptionPane.showInputDialog(
                 this,
                 "Enter the name of the save file:",
                 "Save Game",
                 JOptionPane.PLAIN_MESSAGE
             );
-
+    
             if (fileName != null) {
-                System.out.println("User entered filename: " + fileName); // Log the filename
                 if (!fileName.trim().isEmpty()) {
                     if (!fileName.endsWith(".sav")) {
                         fileName += ".sav";
                     }
-                    System.out.println("Final filename to save: " + fileName); // Confirm final filename
                     try {
                         GameState gameState = new GameState(
                             halls, currentHallNo, hero.getHealth(), tickTime, halls[currentHallNo].getTime()
                         );
-                    
                         SaveManager.saveGame(gameState, fileName);
-                        System.out.println("Game saved successfully as " + fileName); // Save success
                         JOptionPane.showMessageDialog(this, "Game saved successfully!");
                     } catch (IOException ex) {
-                        System.err.println("Error saving game: " + ex.getMessage());
                         ex.printStackTrace();
                     }
                 } else {
-                    System.out.println("Invalid filename entered."); // Log invalid input
                     JOptionPane.showMessageDialog(this, "Invalid filename. Try again.");
                 }
-            } else {
-                System.out.println("Save operation canceled by the user."); // User canceled
             }
-
-            // Restore keyboard focus to PlayPanel after dialog closes
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                this.requestFocusInWindow();
-                System.out.println("Focus returned to PlayPanel."); // Focus restored
-            });
+            this.requestFocusInWindow();
         });
-
-        // Set button bounds and add to panel
         saveButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(saveButton);
     }
-
+    
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();

@@ -121,6 +121,8 @@ public class Hero extends Character{
         selectProp();
         selectEnchantment();
         use();
+
+        checkMouseInteraction(); // new
     }
 
     // Activate Reveal Rune on pressing 'R'
@@ -291,6 +293,18 @@ public class Hero extends Character{
                 System.out.println(Arrays.toString(inventory));
             }
         } 
+    }
+
+    private void checkMouseInteraction() {
+        if (keyboard.mouseButtonPressed) {
+            keyboard.mouseButtonPressed = false; // Reset so we don't spam interactions
+            if (selectedProp != null) {
+                // Optionally check "distance" if you only want close interactions
+                // e.g., if (distanceTo(selectedProp) <= 1) selectedProp.interact();
+    
+                selectedProp.interact(); 
+            }
+        }
     }
 
     // might clean this up later, checks for collision in 3 tiles in bottom/top/right/left, function is chosen depending on which direction the hero is trying to move
