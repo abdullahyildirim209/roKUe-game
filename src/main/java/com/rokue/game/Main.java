@@ -140,6 +140,7 @@ public class Main {
         playWindow.setTitle("RoKUe-Play");
         playWindow.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
         playWindow.setLayout(new BorderLayout());
+        playWindow.setUndecorated(true);
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
