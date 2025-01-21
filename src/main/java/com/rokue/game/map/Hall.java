@@ -187,6 +187,15 @@ public class Hall implements Serializable {
             grid[lastEnchantment.getXPosition()][lastEnchantment.getYPosition()] = null;
             lastEnchantment = null;
         } 
+        
+        // Follow ActiveLuringGem
+        if (activeLuringGem != null) {
+            for (Character f : characters) {
+                if (f instanceof Fighter) {
+                    ((Fighter) f).followLuringGem();
+                }
+            }
+        }
 
         // Delete LuringGem if all fighters are nearby
         if (activeLuringGem != null) {
@@ -300,12 +309,6 @@ public class Hall implements Serializable {
             l.setPickable(false);
             l.place(x, y, this);
             activeLuringGem = l;
-
-            for (Character f : characters) {
-                if (f instanceof Fighter) {
-                    ((Fighter) f).followLuringGem();
-                }
-            }
         }
     }
 
