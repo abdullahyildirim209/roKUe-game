@@ -2,13 +2,6 @@ package com.rokue.game;
 
 
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
@@ -16,6 +9,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.entities.Prop;
@@ -134,8 +132,10 @@ public class Main {
         SoundManager.loadSound("heroHit", "/sprites/wav/hasar alma sesi.wav");
         SoundManager.loadSound("itemCollected", "/sprites/wav/collecting item.wav");
         SoundManager.loadSound("fail", "/sprites/wav/fail-144746.wav");
+        SoundManager.loadSound("back", "/sprites/wav/Background.wav");
 
         System.out.println("All sounds loaded successfully.");
+        SoundManager.playSound("back");
 
         JFrame playWindow = new JFrame();
         playWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
