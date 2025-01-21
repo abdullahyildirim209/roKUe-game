@@ -312,8 +312,33 @@ public class Hero extends Character{
             if (selectedProp != null) {
                 // Optionally check "distance" if you only want close interactions
                 // e.g., if (distanceTo(selectedProp) <= 1) selectedProp.interact();
-    
-                selectedProp.interact(); 
+                selectedProp.interact();  
+            }
+
+            if (selectedEnchantment != null && selectedEnchantment.isPickable()) {
+                keyboard.use = false;
+                if (selectedEnchantment instanceof ExtraTime) {
+                    hall.setTime(hall.getTime() + 5);
+                }
+                if (selectedEnchantment instanceof ExtraLife) {
+                    if (!((ExtraLife) selectedEnchantment).isOpen()) {
+                        ((ExtraLife) selectedEnchantment).openChest();
+                        return;
+                    }
+                    else {
+                        if (health < 5) {
+                            health++; 
+                        }
+                    }
+                }
+                else {
+                    addToInventory(selectedEnchantment);
+                }
+
+                SoundManager.playSound("itemCollected");
+                hall.getEnchantments().remove(selectedEnchantment);
+                hall.getGrid()[selectedEnchantment.getXPosition()][selectedEnchantment.getYPosition()] = null;
+                System.out.println(Arrays.toString(inventory));
             }
         }
     }
