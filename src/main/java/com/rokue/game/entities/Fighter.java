@@ -18,7 +18,7 @@ public class Fighter extends Character implements Serializable {
     private int targetX = -1;
     private int targetY = -1;
     private boolean moved = false;
-    private final long randomMoveTime = 30;
+    private final long randomMoveTime = 60;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
 
@@ -37,15 +37,9 @@ public class Fighter extends Character implements Serializable {
         if (xPosition >= hall.getHero().xPosition) sideOfHero = false;
         else sideOfHero = true;
 
-        if (followLuringGem && targetX == -1 && targetY == -1) {
-            targetX = findNearestLuringGem()[0];
-            targetY = findNearestLuringGem()[1];
-        }
-
         if (followLuringGem && targetX != -1 && targetY != -1) {
             moveTowards(targetX, targetY, false);
         }
-
         else {
             int heroX = hall.getHero().getXPosition();
             int heroY = hall.getHero().getYPosition();
@@ -54,7 +48,7 @@ public class Fighter extends Character implements Serializable {
             int dy = Math.abs(heroY - yPosition);
 
             // If distance to Hero is 1, attack
-            if (dx + dy == 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
+            if (dx + dy <= 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
                 hall.getHero().decreaseHealth();
                 lastAttack = PlayPanel.tickTime;
                 SoundManager.playSound("fighterAttack");
@@ -62,19 +56,19 @@ public class Fighter extends Character implements Serializable {
             }
             // If the Hero is within 3 tiles, move towards the Hero
             else if (dx + dy <= 3) {
-                moveTowards(heroX, heroY, false);
+                targetX = heroX;
+                targetY = heroY;
+                moveTowards(targetX, targetY, false);
             }
             // Otherwise, move randomly
             else {
                 randomMove();
             }
-
         }
-
-
     }
 
     public void reset() {
+        followLuringGem = false;
         targetX = -1;
         targetY = -1;
     }
@@ -113,34 +107,17 @@ public class Fighter extends Character implements Serializable {
 
     }
 
-    public int[] findNearestLuringGem() {
-        int minDistance = Integer.MAX_VALUE;
-        int[] pos = {-1, -1};
-        for (Enchantment e : hall.getEnchantments()) {
-            if (e instanceof LuringGem) {
-                int distance = Math.abs(e.getXPosition() - xPosition) + Math.abs(e.getYPosition() - yPosition);
-
-                if (distance < minDistance) {
-                    minDistance =  distance;
-                    pos[0] = e.getXPosition();
-                    pos[1] = e.getYPosition();
-                }
-            }
-        }
-        return pos;
-    }
 
     public void followLuringGem() {
+        LuringGem l = hall.getActiveLuringGem();
+        targetX = l.getXPosition();
+        targetY = l.getYPosition();
         followLuringGem = true;
-    }
-
-    public void stopFollowingLuringGem() {
-        followLuringGem = false;
     }
 
     @Override
     public Image getSprite(SpriteLoader spriteLoader) {
-        if (followLuringGem && targetX != -1 && targetY != -1)
+        if (targetX != -1 && targetY != -1)
             return spriteLoader.getMonsterSprites()[targetX > xPosition ? 5 : 6];
         else 
             return spriteLoader.getMonsterSprites()[sideOfHero ? 5 : 6];
