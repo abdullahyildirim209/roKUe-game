@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.entities.Prop;
@@ -144,7 +145,10 @@ public class Main {
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
-        int scale = gd.getDisplayMode().getHeight() / 360;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenHeight = screenSize.height;
+        //int screenHeight = gd.getDisplayMode().getHeight();
+        int scale = screenHeight / 360;
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
@@ -154,8 +158,6 @@ public class Main {
         rightPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
         rightPanel.setBackground(new Color(66, 40, 53));
 
-        
-
         PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded, remainingTime, scale);
         playWindow.setLayout(new BorderLayout());
         playWindow.add(playPanel, BorderLayout.CENTER);
@@ -164,7 +166,7 @@ public class Main {
         playWindow.pack();
         playWindow.setLocationRelativeTo(null);
         playWindow.setVisible(true);
-        gd.setFullScreenWindow(playWindow);
+        //gd.setFullScreenWindow(playWindow);
 
 
         // Start the game loop
