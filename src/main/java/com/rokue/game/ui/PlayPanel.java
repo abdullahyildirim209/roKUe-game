@@ -144,6 +144,9 @@ public class PlayPanel extends JPanel implements Runnable {
     
         // Save button
         saveButton.addActionListener(e -> {
+            keyboard.pause = !keyboard.pause;
+            this.requestFocusInWindow();
+
             System.out.println("Save button clicked.");
             String fileName = JOptionPane.showInputDialog(
                 this,
@@ -151,7 +154,9 @@ public class PlayPanel extends JPanel implements Runnable {
                 "Save Game",
                 JOptionPane.PLAIN_MESSAGE
             );
-    
+
+            keyboard.pause = !keyboard.pause;
+
             if (fileName != null) {
                 if (!fileName.trim().isEmpty()) {
                     if (!fileName.endsWith(".sav")) {
@@ -170,7 +175,6 @@ public class PlayPanel extends JPanel implements Runnable {
                     JOptionPane.showMessageDialog(this, "Invalid filename. Try again.");
                 }
             }
-            this.requestFocusInWindow();
         });
         saveButton.setBounds(entireWidth - 42 * scale, 7 * scale, 30 * scale, 15 * scale);
         this.add(saveButton);
