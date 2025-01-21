@@ -7,12 +7,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.IOException;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -381,7 +378,7 @@ public void run() {
         gameThread = null;
 
         // Determine the background image based on win/lose status
-        String backgroundPath = isWin ? "/sprites/gameOver/winScreen.png" : "/sprites/gameOver/loseScreen.png";
+        String backgroundPath = isWin ? "/sprites/gameOver/victory.png" : "/sprites/gameOver/gameOverV2.png";
 
         // Use SwingUtilities to handle thread-safe operations on the GUI
         javax.swing.SwingUtilities.invokeLater(() -> {

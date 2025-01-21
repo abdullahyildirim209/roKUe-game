@@ -28,7 +28,7 @@ public class HelpScreen extends JDialog {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Load and draw background image for help screen
-                Image helpBackground = new ImageIcon(SpriteLoader.class.getResource("/sprites/HelpScreen.png")).getImage();
+                Image helpBackground = new ImageIcon(SpriteLoader.class.getResource("/sprites/menu/HelpScreen.png")).getImage();
                 if (helpBackground != null) {
                     g.drawImage(helpBackground, 0, 0, getWidth(), getHeight(), this);
                 } else {
@@ -71,7 +71,10 @@ public class HelpScreen extends JDialog {
             "Monsters spawn every 8 seconds to ruin your day. Beware!\n" +
             "- Archer Monster: Pew pew! If you're within 4 squares, dodge those arrows or wear a Cloak of Protection to go incognito.\n" +
             "- Fighter Monster: Watch out for close-range stabs! Toss a Luring Gem to send them on a wild goose chase.\n" +
-            "- Wizard Monster: A prankster that teleports runes every 5 seconds. Stay vigilant, wizard hunter!\n\n" +
+            "- Wizard Monster: A tricky one! Their behavior changes based on how much time remains:\n" +
+            "    * Less than 30% time left: They teleport you to a random empty location once and disappear. Stay alert!\n" +
+            "    * More than 70% time left: They teleport the rune every 3 seconds, making it harder to find.\n" +
+            "    * 30-70% time left: They stay where they spawn for 2 seconds and then disappear without causing trouble.\n\n" +
             "Use Items Like a Pro\n" +
             "Access your trusty bag to unleash collected enchantments:\n" +
             "- Reveal: Press R to highlight a 4x4 area where the rune might be. (It's like rune radar!)\n" +
@@ -83,6 +86,7 @@ public class HelpScreen extends JDialog {
             "- Pause/Resume: Need a breather? Hit the Pause button. Ready to dive back in? Hit Resume.\n" +
             "- Game Over: Lose all lives or run out of time, and the dungeon wins. Sad times.\n\n"
         );
+
 
         JScrollPane scrollPane = new JScrollPane(helpTextArea);
         scrollPane.setOpaque(false);
@@ -104,7 +108,7 @@ public class HelpScreen extends JDialog {
         
 
         // Adjust position slightly above the bottom and centered
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0)); // Move it slightly up
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0)); 
         dialogPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(dialogPanel);

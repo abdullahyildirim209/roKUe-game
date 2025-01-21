@@ -7,7 +7,13 @@ import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import com.rokue.game.Main;
 import com.rokue.game.map.Hall;
@@ -30,7 +36,7 @@ public class MainPanel extends JFrame {
                 super.paintComponent(g);
                 // Load and draw background image
                 Image backgroundImage = 
-                    new ImageIcon(SpriteLoader.class.getResource("/sprites/MainMenu.jpg")).getImage();
+                    new ImageIcon(SpriteLoader.class.getResource("/sprites/menu/MainMenuV2.png")).getImage();
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
@@ -58,20 +64,20 @@ public class MainPanel extends JFrame {
 
                 // Dynamically align buttons
                 playGameButton.setBounds(
-                    width * 175 / 1000, height * 68 / 100, 
-                    width * 10 / 100, height * 10 / 100
+                    width * 235 / 1000, height * 60 / 100, 
+                    width * 10 / 100, height * 40 / 100
                 );
                 buildModeButton.setBounds(
-                    width * 47 / 100, height * 68 / 100, 
-                    width * 10 / 100, height * 10 / 100
+                    width * 350 / 1000, height * 60 / 100, 
+                    width * 10 / 100, height * 40 / 100
                 );
                 helpButton.setBounds(
-                    width * 76 / 100, height * 68 / 100, 
-                    width * 10 / 100, height * 10 / 100
+                    width * 565 / 1000, height * 60 / 100, 
+                    width * 10 / 100, height * 40 / 100
                 );
                 loadButton.setBounds(
-                    width * 47 / 100, height * 80 / 100, 
-                    width * 10 / 100, height * 10 / 100
+                    width * 675 / 1000, height * 60 / 100, 
+                    width * 10 / 100, height * 40 / 100
                 );
             }
         });
