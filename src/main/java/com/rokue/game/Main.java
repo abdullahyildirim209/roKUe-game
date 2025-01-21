@@ -107,8 +107,8 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             halls[i] = new Hall(rng);
             for (int j = 0; j < ((i + 1) * 4 + 1 + rng.nextInt(4)); j++) {
-                int[] IDs = {2, 4, 4, 4, 4, 12, 12, 13, 13, 14, 14, 14, 14}; // crate and pillar more likely because they look good, and heart chest less likely
-                new Prop(IDs[rng.nextInt(IDs.length)]).randomlyPlace(halls[i]);;
+                int[] IDs = {2, 2, 2, 2, 10, 10, 11, 11, 12, 12, 12, 12}; // crate and pillar more likely because they look good
+                new Prop(IDs[rng.nextInt(IDs.length)]).randomlyPlace(halls[i]);
             }
         }
 

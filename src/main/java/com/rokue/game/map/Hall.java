@@ -9,6 +9,7 @@ import com.rokue.game.entities.Character;
 import com.rokue.game.entities.CloakOfProtection;
 import com.rokue.game.entities.Enchantment;
 import com.rokue.game.entities.Entity;
+import com.rokue.game.entities.ExtraLife;
 import com.rokue.game.entities.ExtraTime;
 import com.rokue.game.entities.Fighter;
 import com.rokue.game.entities.Hero;
@@ -158,7 +159,7 @@ public class Hall implements Serializable {
         // Random enchantment spawn
         if (PlayPanel.tickTime - lastEnchantmentTime > 12*60) {
             lastEnchantmentTime = PlayPanel.tickTime;
-            int x = RNG.nextInt(4);
+            int x = RNG.nextInt(5);
             Enchantment e = null;
             int[] pos = getRandomEmptyTilePosition();
             if (x == 0) {
@@ -171,6 +172,10 @@ public class Hall implements Serializable {
             }
             else if (x == 2) {
                 e = new LuringGem();
+                e.place(pos[0], pos[1], this);
+            }
+            else if (x == 3) {
+                e = new ExtraLife();
                 e.place(pos[0], pos[1], this);
             }
             else {

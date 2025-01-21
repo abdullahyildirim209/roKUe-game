@@ -44,19 +44,16 @@ public class Wizard extends Character implements Serializable {
             int time = hall.getTime();
 
             if ((float)time/totalTime < 0.3) {
-                System.out.println("w1");
                 if (!(wb instanceof WizardBehavior1)) {
                     wb = new WizardBehavior1(hall, this);
                 }
             }
             else if ((float)time/totalTime > 0.7) {
-                System.out.println("w2");
                 if (!(wb instanceof  WizardBehavior2)) {
                     wb = new WizardBehavior2(hall, this);
                 }
             }
             else {
-                System.out.println("w3");
                 if (!(wb instanceof WizardBehavior3)) {
                     wb = new WizardBehavior3(hall, this);
                 }

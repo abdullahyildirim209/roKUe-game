@@ -27,7 +27,7 @@ import com.rokue.game.map.Hall;
 public class BuildModeDesigner extends JPanel {
     private Hall[][] halls; // 2x2 grid of halls
     private String selectedAction = "Place"; // Default action
-    private int objectID = 4; // Default object = Crate
+    private int objectID = 2; // Default object = Crate
     private final int scale = 1; // Adjusted scale
     private final int scaledTileSize = Hall.getPixelsPerTile() * scale;
     private final int hallSpacing = 50; // Spacing between grids
@@ -138,7 +138,7 @@ public class BuildModeDesigner extends JPanel {
         objectLabel.setForeground(Color.WHITE);
         rightPanel.add(objectLabel, gbc);
     
-        int[] objectIDs = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+        int[] objectIDs = {2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 12};
     
         for (Integer oID : objectIDs) {
             gbc.gridy++;

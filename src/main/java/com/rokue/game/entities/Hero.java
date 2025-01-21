@@ -283,6 +283,17 @@ public class Hero extends Character{
                 if (selectedEnchantment instanceof ExtraTime) {
                     hall.setTime(hall.getTime() + 5);
                 }
+                if (selectedEnchantment instanceof ExtraLife) {
+                    if (!((ExtraLife) selectedEnchantment).isOpen()) {
+                        ((ExtraLife) selectedEnchantment).openChest();
+                        return;
+                    }
+                    else {
+                        if (health < 5) {
+                            health++; 
+                        }
+                    }
+                }
                 else {
                     addToInventory(selectedEnchantment);
                 }
