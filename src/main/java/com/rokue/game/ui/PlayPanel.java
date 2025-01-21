@@ -1,6 +1,7 @@
 package com.rokue.game.ui;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -394,6 +395,7 @@ public void run() {
         // Use SwingUtilities to handle thread-safe operations on the GUI
         javax.swing.SwingUtilities.invokeLater(() -> {
             javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            parentFrame.setLayout(new BorderLayout());
 
             // If the parent frame exists, make it full screen
             if (parentFrame != null) {
