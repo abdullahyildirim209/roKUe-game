@@ -144,7 +144,7 @@ public class PlayPanel extends JPanel implements Runnable {
     
         // Save button
         saveButton.addActionListener(e -> {
-            keyboard.pause = !keyboard.pause;
+            keyboard.pause = true;
             this.requestFocusInWindow();
 
             System.out.println("Save button clicked.");
@@ -155,7 +155,7 @@ public class PlayPanel extends JPanel implements Runnable {
                 JOptionPane.PLAIN_MESSAGE
             );
 
-            keyboard.pause = !keyboard.pause;
+            keyboard.pause = false;
 
             if (fileName != null) {
                 if (!fileName.trim().isEmpty()) {
