@@ -138,7 +138,7 @@ public class BuildModeDesigner extends JPanel {
         objectLabel.setForeground(Color.WHITE);
         rightPanel.add(objectLabel, gbc);
     
-        int[] objectIDs = {2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 12};
+        int[] objectIDs = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     
         for (Integer oID : objectIDs) {
             gbc.gridy++;
