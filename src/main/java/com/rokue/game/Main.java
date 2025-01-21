@@ -2,16 +2,16 @@ package com.rokue.game;
 
 
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -132,48 +132,41 @@ public class Main {
         SoundManager.loadSound("heroHit", "/sprites/wav/hasar alma sesi.wav");
         SoundManager.loadSound("itemCollected", "/sprites/wav/collecting item.wav");
         SoundManager.loadSound("fail", "/sprites/wav/fail-144746.wav");
+        SoundManager.loadSound("back", "/sprites/wav/Background.wav");
 
         System.out.println("All sounds loaded successfully.");
+        SoundManager.playSound("back");
 
         JFrame playWindow = new JFrame();
         playWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         playWindow.setResizable(false);
         playWindow.setTitle("RoKUe-Play");
         playWindow.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
-        playWindow.setLayout(new BorderLayout());
+        //playWindow.setLayout(new BorderLayout());
+        playWindow.setLayout(new GridBagLayout());
         playWindow.setUndecorated(true);
+        playWindow.getContentPane().setBackground(new Color(66, 40, 53));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenHeight = screenSize.height;
         //int screenHeight = gd.getDisplayMode().getHeight();
-        int scale = screenHeight / 360;
-
-        JPanel leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
-        leftPanel.setBackground(new Color(66, 40, 53));
-
-        JPanel rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
-        rightPanel.setBackground(new Color(66, 40, 53));
+        int scale = screenSize.height / 360;
+        playWindow.setSize(screenSize.width, screenSize.height);
 
         PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded, remainingTime, scale);
-        playWindow.setLayout(new BorderLayout());
-        playWindow.add(playPanel, BorderLayout.CENTER);
-        playWindow.add(leftPanel, BorderLayout.WEST);
-        playWindow.add(rightPanel, BorderLayout.EAST);
-        if (360 * scale < screenHeight) {
-            JPanel bottomPanel = new JPanel();
-            bottomPanel.setPreferredSize(new Dimension(screenSize.width,  screenSize.height - 360 * scale));
-            bottomPanel.setBackground(new Color(66, 40, 53));
-            playWindow.add(bottomPanel, BorderLayout.SOUTH);
-        }
-        playWindow.pack();
+        playWindow.add(playPanel, gbc);
         playWindow.setLocationRelativeTo(null);
         playWindow.setVisible(true);
         //gd.setFullScreenWindow(playWindow);
-
 
         // Start the game loop
         playPanel.startGameThread();
