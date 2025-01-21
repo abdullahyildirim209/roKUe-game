@@ -28,16 +28,16 @@ import com.rokue.game.utils.GameState;
 import com.rokue.game.utils.SaveManager;
 
 public class PlayPanel extends JPanel implements Runnable {
-    final int scale = 2; // 1x1 pixel is shown as 4x4 pixels on screen
-    final int scaledTileSize = Hall.getPixelsPerTile() * scale;
+    int scale; // 1x1 pixel is shown as 4x4 pixels on screen
+    int scaledTileSize;
 
-    final int screenWidth = 266 * scale;
-    final int screenHeight = 360 * scale; 
+    int screenWidth;
+    int screenHeight;
     
-    final int entireWidth = 400 * scale;
+    int entireWidth;
     
-    final int xOffset = -11 * scale;
-    final int yOffset = 38 * scale;
+    int xOffset;
+    int yOffset;
 
     int fps = 60;
     
@@ -58,10 +58,21 @@ public class PlayPanel extends JPanel implements Runnable {
 
     public static int tickTime = 0;
 
-    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader, int currentHallIndex, boolean isGameLoaded, int remainingTime) {
+    public PlayPanel(Hall[] halls, SpriteLoader spriteLoader, int currentHallIndex, boolean isGameLoaded, int remainingTime, int scale) {
         this.currentHallNo = currentHallIndex;
         this.halls = halls;
         this.spriteLoader = spriteLoader;
+        this.scale = scale;
+
+        scaledTileSize = Hall.getPixelsPerTile() * scale;
+
+        screenWidth = 266 * scale;
+        screenHeight = 360 * scale; 
+        
+        entireWidth = 400 * scale;
+        
+        xOffset = -11 * scale;
+        yOffset = 38 * scale;
     
         // Initialize keyboard
         this.keyboard = new Keyboard();
@@ -293,12 +304,12 @@ public void run() {
         g2.drawImage(spriteLoader.enchantmentSprites[1], inventoryPanelX+48*scale, 215*scale, 16*scale, 18 * scale, null);
         g2.drawImage(spriteLoader.enchantmentSprites[2], inventoryPanelX+64*scale, 215*scale, 16*scale, 18 * scale, null);
         
-        g2.setFont(new Font("Arial", Font.BOLD, 30));
+        g2.setFont(new Font("Arial", Font.BOLD, 10 * scale));
         g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[1]), inventoryPanelX+35*scale, 203*scale);
         g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[0]), inventoryPanelX+52*scale, 203*scale);
         g2.drawString(String.valueOf(halls[currentHallNo].getHero().getInventory()[2]), inventoryPanelX+69*scale, 203*scale);
         
-        g2.setFont(new Font("Arial", Font.BOLD, 30));
+        g2.setFont(new Font("Arial", Font.BOLD, 10 * scale));
         g2.drawString("Remaining Time:", inventoryPanelX+15*scale, 45*scale);
         if (halls[currentHallNo].getTime()>10) {
         	g2.setColor(Color.GREEN);	
@@ -334,7 +345,7 @@ public void run() {
         else if (currentHallNo==1) hallName = "Hall Of Earth";
         else if (currentHallNo==2) hallName = "Hall Of Fire";
         else hallName = "Hall of Air";
-        g2.setFont(new Font("Times New Roman", Font.BOLD, 40));
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 13 * scale));
         g2.setColor(new Color(211, 211, 211));
         g2.drawString(hallName, screenWidth/2-40*scale, 15*scale);
         

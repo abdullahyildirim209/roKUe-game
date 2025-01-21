@@ -4,8 +4,15 @@ package com.rokue.game;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.entities.Prop;
@@ -15,7 +22,6 @@ import com.rokue.game.ui.MainPanel;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 import com.rokue.game.utils.RNG;
-
 
 public class Main {
     public static void main(String[] args) {
@@ -133,12 +139,32 @@ public class Main {
         playWindow.setResizable(false);
         playWindow.setTitle("RoKUe-Play");
         playWindow.setIconImage(new ImageIcon(SpriteLoader.class.getResource("/sprites/icon.png")).getImage());
+        playWindow.setLayout(new BorderLayout());
 
-        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded, remainingTime);
-        playWindow.add(playPanel);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        int scale = gd.getDisplayMode().getHeight() / 360;
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
+        leftPanel.setBackground(new Color(66, 40, 53));
+
+        JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(120 * scale, 360 * scale));
+        rightPanel.setBackground(new Color(66, 40, 53));
+
+        
+
+        PlayPanel playPanel = new PlayPanel(halls, spriteHandler,currentHallIndex, isGameLoaded, remainingTime, scale);
+        playWindow.setLayout(new BorderLayout());
+        playWindow.add(playPanel, BorderLayout.CENTER);
+        playWindow.add(leftPanel, BorderLayout.WEST);
+        playWindow.add(rightPanel, BorderLayout.EAST);
         playWindow.pack();
         playWindow.setLocationRelativeTo(null);
         playWindow.setVisible(true);
+        gd.setFullScreenWindow(playWindow);
+
 
         // Start the game loop
         playPanel.startGameThread();
