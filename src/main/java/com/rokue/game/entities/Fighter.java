@@ -1,23 +1,26 @@
 package com.rokue.game.entities;
 
 import java.awt.Image;
+import java.io.Serializable;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Fighter extends Character{
+public class Fighter extends Character implements Serializable { 
+    private static final long serialVersionUID = 1L;
     
-    private boolean sideOfHero = false;
     private boolean followLuringGem = false;
     private final long attackDelay = 30;
     private long lastAttack = 0;
     private int targetX = -1;
     private int targetY = -1;
     private boolean moved = false;
-    private final long randomMoveTime = 30;
+    private final long randomMoveTime = 60;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
+    private boolean xDirection = false;
 
     public Fighter() {
         super();
@@ -31,18 +34,9 @@ public class Fighter extends Character{
 
     @Override
     public void update() {
-        if (xPosition >= hall.getHero().xPosition) sideOfHero = false;
-        else sideOfHero = true;
-
-        if (followLuringGem && targetX == -1 && targetY == -1) {
-            targetX = findNearestLuringGem()[0];
-            targetY = findNearestLuringGem()[1];
-        }
-
         if (followLuringGem && targetX != -1 && targetY != -1) {
             moveTowards(targetX, targetY, false);
         }
-
         else {
             int heroX = hall.getHero().getXPosition();
             int heroY = hall.getHero().getYPosition();
@@ -51,26 +45,27 @@ public class Fighter extends Character{
             int dy = Math.abs(heroY - yPosition);
 
             // If distance to Hero is 1, attack
-            if (dx + dy == 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
+            if (dx + dy <= 1 && PlayPanel.tickTime - lastAttack > attackDelay) {
                 hall.getHero().decreaseHealth();
                 lastAttack = PlayPanel.tickTime;
+                SoundManager.playSound("fighterAttack");
                 System.out.println("Fighter hit the Hero! Hero's health: " + hall.getHero().getHealth());
             }
             // If the Hero is within 3 tiles, move towards the Hero
             else if (dx + dy <= 3) {
-                moveTowards(heroX, heroY, false);
+                targetX = heroX;
+                targetY = heroY;
+                moveTowards(targetX, targetY, false);
             }
             // Otherwise, move randomly
             else {
                 randomMove();
             }
-
         }
-
-
     }
 
     public void reset() {
+        followLuringGem = false;
         targetX = -1;
         targetY = -1;
     }
@@ -98,48 +93,36 @@ public class Fighter extends Character{
             randomMoveDirection = hall.getRNG().nextInt(4);
         }
 
-        if (randomMoveDirection == 0)
-            moveTowards(xPosition + 1, yPosition, true);
-        else if (randomMoveDirection == 1)
-            moveTowards(xPosition - 1, yPosition, true);
-        else if (randomMoveDirection == 2)
-            moveTowards(xPosition, yPosition + 1, true);
-        else if (randomMoveDirection == 3)
-            moveTowards(xPosition, yPosition - 1, true);
-
-    }
-
-    public int[] findNearestLuringGem() {
-        int minDistance = Integer.MAX_VALUE;
-        int[] pos = {-1, -1};
-        for (Enchantment e : hall.getEnchantments()) {
-            if (e instanceof LuringGem) {
-                int distance = Math.abs(e.getXPosition() - xPosition) + Math.abs(e.getYPosition() - yPosition);
-
-                if (distance < minDistance) {
-                    minDistance =  distance;
-                    pos[0] = e.getXPosition();
-                    pos[1] = e.getYPosition();
-                }
+        switch (randomMoveDirection) {
+            case 0 -> {
+                xDirection = true;
+                moveTowards(xPosition + 1, yPosition, true);
+            }
+            case 1 -> {
+                xDirection = false;
+                moveTowards(xPosition - 1, yPosition, true);
+            }
+            case 2 -> moveTowards(xPosition, yPosition + 1, true);
+            case 3 -> moveTowards(xPosition, yPosition - 1, true);
+            default -> {
             }
         }
-        return pos;
+
     }
 
     public void followLuringGem() {
+        LuringGem l = hall.getActiveLuringGem();
+        targetX = l.getXPosition();
+        targetY = l.getYPosition();
         followLuringGem = true;
-    }
-
-    public void stopFollowingLuringGem() {
-        followLuringGem = false;
     }
 
     @Override
     public Image getSprite(SpriteLoader spriteLoader) {
-        if (followLuringGem && targetX != -1 && targetY != -1)
-            return spriteLoader.getMonsterSprites()[targetX > xPosition ? 3 : 4];
+        if (targetX != -1 && targetY != -1)
+            return spriteLoader.getMonsterSprites()[targetX > xPosition ? 5 : 6];
         else 
-            return spriteLoader.getMonsterSprites()[sideOfHero ? 3 : 4];
+            return spriteLoader.getMonsterSprites()[xDirection ? 5 : 6];
 
     }
 

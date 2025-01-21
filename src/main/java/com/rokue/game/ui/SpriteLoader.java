@@ -13,7 +13,7 @@ public class SpriteLoader {
 
     // 0 = door left, 2 = door right, 4 = healtChest,               6 = openHealtChest,               8 = crate (not open / highlighted)
     // 1 = door left, 3 = door right, 5 = healtChest (highlighted), 7 = openHealtChest (highlighted), 9 = crate (open / highlighted)
-    Image[] propSprites = new Image[30];
+    Image[] propSprites = new Image[26];
 
     // 0 = water, 1 = earth, 2 = fire, 3 = air
     Image[] runeSprites = new Image[4];
@@ -21,20 +21,24 @@ public class SpriteLoader {
     // 0 = background, 1 = bottom wall
     Image[] hallSprites = new Image[2];
 
-    // 0 = wizard, 1,2 = archer, 3,4 = fighter
-    Image[] monsterSprites = new Image[5];
+    // 0,1,2 = wizard, 3,4 = archer, 5,6 = fighter
+    Image[] monsterSprites = new Image[7];
 
-    Image[] enchantmentSprites = new Image[8];
+    Image[] enchantmentSprites = new Image[12];
+
+    Image[] arrowSprites = new Image[8];
 
 
 
     public SpriteLoader() {
         loadSprites(9, "hero", heroSprites);
-        loadSprites(29, "prop", propSprites);
+        loadSprites(25, "prop", propSprites);
         loadSprites(1, "hall", hallSprites);
         loadSprites(3, "rune", runeSprites);
-        loadSprites(4, "monster", monsterSprites);
-        loadSprites(7, "enchantment", enchantmentSprites);
+        loadSprites(6, "monster", monsterSprites);
+        loadSprites(11, "enchantment", enchantmentSprites);
+        loadSprites(7, "arrow", arrowSprites);
+        
     }
 
     public int getCurrentHallNo() {
@@ -66,6 +70,10 @@ public class SpriteLoader {
         for (int imageNumber = 0; imageNumber <= end; imageNumber++) {
             spriteArray[imageNumber] = new ImageIcon(SpriteLoader.class.getResource(String.format("/sprites/%s/%d.png", entity, imageNumber))).getImage();
         }
+    }
+
+    public Image[] getArrowSprites() {
+        return arrowSprites;
     }
 }
 

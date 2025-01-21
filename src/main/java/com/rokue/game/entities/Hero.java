@@ -3,12 +3,13 @@ package com.rokue.game.entities;
 import java.awt.Image;
 import java.util.Arrays;
 
+import com.rokue.game.audio.SoundManager;
 import com.rokue.game.input.Keyboard;
 import com.rokue.game.map.Hall;
 import com.rokue.game.ui.PlayPanel;
 import com.rokue.game.ui.SpriteLoader;
 
-public class Hero extends Character {
+public class Hero extends Character{
     Keyboard keyboard;
 
     int looking = 0; // 0 = down, 2 = left, 4 = up, 6 = right
@@ -16,8 +17,8 @@ public class Hero extends Character {
     boolean running = false;
     int runStage = 0; // 0 = default, 1 = legs up
     int runTimer = 0;
-    int health = 3;
-    int[] inventory = {10, 2, 5};
+    public int health = 3;
+    int[] inventory = {0, 0, 0};
     boolean cloakActive = false;
     private long cloakStartTime = 0; // When the cloak was activated
     private final long cloakDuration = 20 * 60; // Cloak duration (20 seconds in ticks)
@@ -60,16 +61,27 @@ public class Hero extends Character {
         hall.setHero(this);
     }
 
+    public void randomlyChangePlace() {
+        int[] position = hall.getRandomEmptyTilePosition();
+        hall.getGrid()[xPosition][yPosition] = null;
+        xPosition = position[0];
+        yPosition = position[1];
+        xPixelPosition = xPosition * Hall.getPixelsPerTile();
+        yPixelPosition = yPosition * Hall.getPixelsPerTile() - 7;
+        hall.getGrid()[xPosition][yPosition] = this;
+    }
+
+
     public void decreaseHealth() {
         if (health > 0) {
             health--;
         }
+        if (health == 0) {
+            System.out.println("Hero died!");
+            SoundManager.playSound("fail");
+        }
     }
 
-    public void increaseHealth() {
-        health++;
-    }
-    
     public void addToInventory(Enchantment e) {
         if (e instanceof RevealRune) inventory[0]++;
         else if (e instanceof CloakOfProtection) inventory[1]++;
@@ -105,6 +117,7 @@ public class Hero extends Character {
         selectProp();
         selectEnchantment();
         use();
+        checkMouseInteraction(); // new
     }
 
     // Activate Reveal Rune on pressing 'R'
@@ -129,8 +142,6 @@ public class Hero extends Character {
             cloakActive = false;
         }
     }
-
-
 
     // Throw Luring Gem on pressing 'B'
     public void throwLuringGem() {
@@ -265,13 +276,64 @@ public class Hero extends Character {
                 if (selectedEnchantment instanceof ExtraTime) {
                     hall.setTime(hall.getTime() + 5);
                 }
-                else addToInventory(selectedEnchantment);
-        
+                if (selectedEnchantment instanceof ExtraLife) {
+                    if (!((ExtraLife) selectedEnchantment).isOpen()) {
+                        ((ExtraLife) selectedEnchantment).openChest();
+                        return;
+                    }
+                    else {
+                        if (health < 5) {
+                            health++; 
+                        }
+                    }
+                }
+                else {
+                    addToInventory(selectedEnchantment);
+                }
+
+                SoundManager.playSound("itemCollected");
                 hall.getEnchantments().remove(selectedEnchantment);
                 hall.getGrid()[selectedEnchantment.getXPosition()][selectedEnchantment.getYPosition()] = null;
                 System.out.println(Arrays.toString(inventory));
             }
         } 
+    }
+
+    private void checkMouseInteraction() {
+        if (keyboard.mouseButtonPressed) {
+            keyboard.mouseButtonPressed = false; // Reset so we don't spam interactions
+            if (selectedProp != null) {
+                // Optionally check "distance" if you only want close interactions
+                // e.g., if (distanceTo(selectedProp) <= 1) selectedProp.interact();
+                selectedProp.interact();  
+            }
+
+            if (selectedEnchantment != null && selectedEnchantment.isPickable()) {
+                keyboard.use = false;
+                if (selectedEnchantment instanceof ExtraTime) {
+                    hall.setTime(hall.getTime() + 5);
+                }
+                if (selectedEnchantment instanceof ExtraLife) {
+                    if (!((ExtraLife) selectedEnchantment).isOpen()) {
+                        ((ExtraLife) selectedEnchantment).openChest();
+                        return;
+                    }
+                    else {
+                        if (health < 5) {
+                            health++; 
+                        }
+                    }
+                }
+                else {
+                    addToInventory(selectedEnchantment);
+                }
+
+                SoundManager.playSound("itemCollected");
+                hall.getEnchantments().remove(selectedEnchantment);
+                hall.getGrid()[selectedEnchantment.getXPosition()][selectedEnchantment.getYPosition()] = null;
+                System.out.println(Arrays.toString(inventory));
+            }
+        }
     }
 
     // might clean this up later, checks for collision in 3 tiles in bottom/top/right/left, function is chosen depending on which direction the hero is trying to move
@@ -313,4 +375,59 @@ public class Hero extends Character {
     public int getShadowX() {
         return getXPixelPosition() + (cloakActive ? 1 : 3);
     }
+
+	public int[] getInventory() {
+		return inventory;
+	}
+
+	public void setKeyboard(Keyboard keyboard) {
+		this.keyboard = keyboard;
+	}
+
+	public void setLooking(int looking) {
+		this.looking = looking;
+	}
+
+	public void setLastSideLooking(boolean lastSideLooking) {
+		this.lastSideLooking = lastSideLooking;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	public void setRunStage(int runStage) {
+		this.runStage = runStage;
+	}
+
+	public void setRunTimer(int runTimer) {
+		this.runTimer = runTimer;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public void setInventory(int[] inventory) {
+		this.inventory = inventory;
+	}
+
+	public void setCloakActive(boolean cloakActive) {
+		this.cloakActive = cloakActive;
+	}
+
+	public void setCloakStartTime(long cloakStartTime) {
+		this.cloakStartTime = cloakStartTime;
+	}
+
+	public void setSelectedProp(Prop selectedProp) {
+		this.selectedProp = selectedProp;
+	}
+
+	public void setSelectedEnchantment(Enchantment selectedEnchantment) {
+		this.selectedEnchantment = selectedEnchantment;
+	}
+	
+	
+    
 }
