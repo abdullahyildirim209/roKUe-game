@@ -90,7 +90,4 @@ public class Archer extends Character implements Serializable {
         return arrows;
     }
 
-    
-    
-    
 }

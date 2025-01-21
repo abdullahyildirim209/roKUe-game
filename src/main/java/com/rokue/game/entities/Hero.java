@@ -82,10 +82,6 @@ public class Hero extends Character{
         }
     }
 
-    public void increaseHealth() {
-        health++;
-    }
-    
     public void addToInventory(Enchantment e) {
         if (e instanceof RevealRune) inventory[0]++;
         else if (e instanceof CloakOfProtection) inventory[1]++;
@@ -121,7 +117,6 @@ public class Hero extends Character{
         selectProp();
         selectEnchantment();
         use();
-
         checkMouseInteraction(); // new
     }
 
@@ -147,8 +142,6 @@ public class Hero extends Character{
             cloakActive = false;
         }
     }
-
-
 
     // Throw Luring Gem on pressing 'B'
     public void throwLuringGem() {

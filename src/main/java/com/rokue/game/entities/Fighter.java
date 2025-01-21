@@ -11,7 +11,6 @@ import com.rokue.game.ui.SpriteLoader;
 public class Fighter extends Character implements Serializable { 
     private static final long serialVersionUID = 1L;
     
-    private boolean sideOfHero = false;
     private boolean followLuringGem = false;
     private final long attackDelay = 30;
     private long lastAttack = 0;
@@ -21,6 +20,7 @@ public class Fighter extends Character implements Serializable {
     private final long randomMoveTime = 60;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
+    private boolean xDirection = false;
 
     public Fighter() {
         super();
@@ -34,9 +34,6 @@ public class Fighter extends Character implements Serializable {
 
     @Override
     public void update() {
-        if (xPosition >= hall.getHero().xPosition) sideOfHero = false;
-        else sideOfHero = true;
-
         if (followLuringGem && targetX != -1 && targetY != -1) {
             moveTowards(targetX, targetY, false);
         }
@@ -96,17 +93,22 @@ public class Fighter extends Character implements Serializable {
             randomMoveDirection = hall.getRNG().nextInt(4);
         }
 
-        if (randomMoveDirection == 0)
-            moveTowards(xPosition + 1, yPosition, true);
-        else if (randomMoveDirection == 1)
-            moveTowards(xPosition - 1, yPosition, true);
-        else if (randomMoveDirection == 2)
-            moveTowards(xPosition, yPosition + 1, true);
-        else if (randomMoveDirection == 3)
-            moveTowards(xPosition, yPosition - 1, true);
+        switch (randomMoveDirection) {
+            case 0 -> {
+                xDirection = true;
+                moveTowards(xPosition + 1, yPosition, true);
+            }
+            case 1 -> {
+                xDirection = false;
+                moveTowards(xPosition - 1, yPosition, true);
+            }
+            case 2 -> moveTowards(xPosition, yPosition + 1, true);
+            case 3 -> moveTowards(xPosition, yPosition - 1, true);
+            default -> {
+            }
+        }
 
     }
-
 
     public void followLuringGem() {
         LuringGem l = hall.getActiveLuringGem();
@@ -120,7 +122,7 @@ public class Fighter extends Character implements Serializable {
         if (targetX != -1 && targetY != -1)
             return spriteLoader.getMonsterSprites()[targetX > xPosition ? 5 : 6];
         else 
-            return spriteLoader.getMonsterSprites()[sideOfHero ? 5 : 6];
+            return spriteLoader.getMonsterSprites()[xDirection ? 5 : 6];
 
     }
 
