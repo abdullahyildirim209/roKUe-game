@@ -2,18 +2,18 @@ package com.rokue.game;
 
 
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.entities.Prop;
@@ -163,6 +163,12 @@ public class Main {
         playWindow.add(playPanel, BorderLayout.CENTER);
         playWindow.add(leftPanel, BorderLayout.WEST);
         playWindow.add(rightPanel, BorderLayout.EAST);
+        if (360 * scale < screenHeight) {
+            JPanel bottomPanel = new JPanel();
+            bottomPanel.setPreferredSize(new Dimension(screenSize.width,  screenSize.height - 360 * scale));
+            bottomPanel.setBackground(new Color(66, 40, 53));
+            playWindow.add(bottomPanel, BorderLayout.SOUTH);
+        }
         playWindow.pack();
         playWindow.setLocationRelativeTo(null);
         playWindow.setVisible(true);
