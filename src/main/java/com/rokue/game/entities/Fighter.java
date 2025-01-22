@@ -2,6 +2,12 @@ package com.rokue.game.entities;
 
 import java.awt.Image;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import com.rokue.game.audio.SoundManager;
 import com.rokue.game.map.Hall;
@@ -16,11 +22,20 @@ public class Fighter extends Character implements Serializable {
     private long lastAttack = 0;
     private int targetX = -1;
     private int targetY = -1;
+    private int nextTargetDirectionX = 0;
+    private int nextTargetDirectionY = 0;
     private boolean moved = false;
     private final long randomMoveTime = 60;
     private long lastRandomMove = 0;
     private int randomMoveDirection = 0;
     private boolean xDirection = false;
+
+    private static final int[][] DIRECTIONS = {
+        {-1, 0}, // up
+        {1, 0},  // down
+        {0, -1}, // left
+        {0, 1}   // right
+    };
 
     public Fighter() {
         super();
@@ -35,7 +50,8 @@ public class Fighter extends Character implements Serializable {
     @Override
     public void update() {
         if (followLuringGem && targetX != -1 && targetY != -1) {
-            moveTowards(targetX, targetY, false);
+            findDirection();
+            moveTowards(xPosition + nextTargetDirectionX, yPosition + nextTargetDirectionY, false);
         }
         else {
             int heroX = hall.getHero().getXPosition();
@@ -55,7 +71,8 @@ public class Fighter extends Character implements Serializable {
             else if (dx + dy <= 3) {
                 targetX = heroX;
                 targetY = heroY;
-                moveTowards(targetX, targetY, false);
+                findDirection();
+                moveTowards(xPosition + nextTargetDirectionX, yPosition + nextTargetDirectionY, false);
             }
             // Otherwise, move randomly
             else {
@@ -109,6 +126,86 @@ public class Fighter extends Character implements Serializable {
         }
 
     }
+
+    public void findDirection() {   // BFS
+        int oldXpos = xPosition;
+        int oldYpos = yPosition;
+
+        Entity[][] grid = hall.getGrid();
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        boolean[] visited = new boolean[rows * cols];
+        HashMap<Integer, Integer> parentMap = new HashMap<>();
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(oldXpos*rows + oldYpos);
+        visited[oldXpos*rows + oldYpos] = true;
+        int current = 0;
+
+        while (!queue.isEmpty()) {
+            current = queue.poll();
+            int curX = current / rows;
+            int curY = current % rows;
+            if (curX == targetX && curY == targetY) {
+                break;
+            }
+
+            for (int[] direction: DIRECTIONS) {
+                int newX = curX + direction[0];
+                int newY = curY + direction[1];
+
+                if ((newX == targetX && newY == targetY) || (newX >= 0 && newX < rows && newY >= 0 && newY < cols && !visited[newX*rows + newY] && grid[newX][newY] == null)) {
+                    queue.add(newX*rows + newY);
+                    visited[newX*rows + newY] = true;
+                    parentMap.put(newX*rows + newY, current);
+                }
+            }
+        }
+
+        List<int[]> path = new ArrayList<>();
+
+        while (current / rows != xPosition || current % rows != yPosition) {
+            int parent = parentMap.get(current);
+    
+            for (int[] direction: DIRECTIONS) {
+                if (parent / rows + direction[0] == current / rows && parent % rows + direction[1] == current % rows) {
+                    path.add(direction);
+                    break;
+                }
+            }
+
+            current = parent;
+        }
+
+        Collections.reverse(path);
+
+        int[] direction = path.get(0);
+        boolean collision = false;
+
+        switch (direction[0]) {
+            case 1 -> {
+                collision = checkUpCollision();
+            }
+            case -1 -> {
+                collision = checkDownCollision();
+            }
+            default -> {
+                if (direction[1] == 1) {
+                    collision = checkRightCollision();
+                }
+                else if (direction[1] == -1) {
+                    collision = checkLeftCollision();
+                }
+            }
+        }
+
+        if (!collision) {
+            nextTargetDirectionX = direction[0];
+            nextTargetDirectionY = direction[1];
+        }
+    }
+
 
     public void followLuringGem() {
         LuringGem l = hall.getActiveLuringGem();
