@@ -24,6 +24,8 @@ public class Fighter extends Character implements Serializable {
     private int targetY = -1;
     private int nextTargetDirectionX = 0;
     private int nextTargetDirectionY = 0;
+    private int previousDirX = 0;
+    private int previousDirY = 0;
     private boolean moved = false;
     private final long randomMoveTime = 60;
     private long lastRandomMove = 0;
@@ -50,8 +52,8 @@ public class Fighter extends Character implements Serializable {
     @Override
     public void update() {
         if (followLuringGem && targetX != -1 && targetY != -1) {
-            findDirection();
-            moveTowards(xPosition + nextTargetDirectionX, yPosition + nextTargetDirectionY, false);
+            int[] dir = findDirection();
+            moveTowards(xPosition + dir[0], yPosition + dir[1], false);
         }
         else {
             int heroX = hall.getHero().getXPosition();
@@ -71,8 +73,8 @@ public class Fighter extends Character implements Serializable {
             else if (dx + dy <= 3) {
                 targetX = heroX;
                 targetY = heroY;
-                findDirection();
-                moveTowards(xPosition + nextTargetDirectionX, yPosition + nextTargetDirectionY, false);
+                int[] dir = findDirection();
+                moveTowards(xPosition + dir[0], yPosition + dir[1], false);
             }
             // Otherwise, move randomly
             else {
@@ -95,7 +97,8 @@ public class Fighter extends Character implements Serializable {
             if (yPosition > y && !checkUpCollision()) yPixelPosition--;
             else if (yPosition < y && !checkDownCollision()) yPixelPosition++;
 
-            if (!calledByRandomMove && ((xPosition > x && checkLeftCollision()) || (xPosition < x && checkRightCollision()) || xPosition == x) && ((yPosition > y && checkUpCollision()) || (yPosition < y && checkDownCollision()) || yPosition == y))
+            //if (!calledByRandomMove && ((xPosition > x && checkLeftCollision()) || (xPosition < x && checkRightCollision()) || xPosition == x) && ((yPosition > y && checkUpCollision()) || (yPosition < y && checkDownCollision()) || yPosition == y))
+            if (x == xPosition && y == yPosition)  
                 randomMove();
 
             moveTo((xPixelPosition + 8) / 16, (yPixelPosition + 15) / 16);
@@ -127,7 +130,7 @@ public class Fighter extends Character implements Serializable {
 
     }
 
-    public void findDirection() {   // BFS
+    public int[] findDirection() {   // BFS
         int oldXpos = xPosition;
         int oldYpos = yPosition;
 
@@ -180,30 +183,40 @@ public class Fighter extends Character implements Serializable {
 
         Collections.reverse(path);
 
-        int[] direction = path.get(0);
+        int[] direction = new int[]{0, 0};
+        if (!path.isEmpty()) {
+           direction = path.get(0);
+        }
+
+        if (direction[0] != 0 || direction[1] != 0) {
+            if (direction[0] != nextTargetDirectionX && direction[1] != nextTargetDirectionY) {
+                previousDirX = nextTargetDirectionX;
+                previousDirY = nextTargetDirectionY;
+            }
+        }
+        
         boolean collision = false;
 
-        switch (direction[0]) {
-            case 1 -> {
-                collision = checkUpCollision();
-            }
-            case -1 -> {
+        if (direction[0] == 1)
+            collision = checkRightCollision();
+        else if (direction[0] == -1)
+            collision = checkLeftCollision();
+        else {
+            if (direction[1] == 1) {
                 collision = checkDownCollision();
             }
-            default -> {
-                if (direction[1] == 1) {
-                    collision = checkRightCollision();
-                }
-                else if (direction[1] == -1) {
-                    collision = checkLeftCollision();
-                }
+            else if (direction[1] == -1) {
+                collision = checkUpCollision();
             }
-        }
-
-        if (!collision) {
+         }
+    
+        
+        if (!collision || (direction[0] == 0 && direction[1] == 0)) {
             nextTargetDirectionX = direction[0];
             nextTargetDirectionY = direction[1];
+            return new int[]{nextTargetDirectionX, nextTargetDirectionY};
         }
+        return new int[]{previousDirX, previousDirY};
     }
 
 
