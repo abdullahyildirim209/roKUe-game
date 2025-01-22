@@ -206,7 +206,9 @@ public void run() {
             currentTime = System.nanoTime();
             lastTime = currentTime;
             System.out.print("");
+            pauseButton.setText("Resume");
         }
+        pauseButton.setText("Pause");
 
         if (delta >= 1) {
             PlayPanel.tickTime++;
